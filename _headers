@@ -1,0 +1,19 @@
+# Security headers for every page (Netlify reads this file at deploy).
+# CSP: scripts only from this site + the pinned jsDelivr bundle (inline scripts are
+# allowed because index/orders/staff each carry a small inline config script);
+# network calls only to Supabase and our own functions; no framing by other sites.
+/*
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net; connect-src 'self' https://secpyyvdokaidzkstbqm.supabase.co; img-src 'self' data:; style-src 'self' 'unsafe-inline'; font-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self' https://checkout.paystack.com; object-src 'none'; upgrade-insecure-requests
+  X-Frame-Options: DENY
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=()
+  Cross-Origin-Opener-Policy: same-origin
+
+# The kitchen board must never be indexed or cached by shared proxies.
+/staff.html
+  X-Robots-Tag: noindex, nofollow
+  Cache-Control: no-store
+
+/.netlify/functions/*
+  Cache-Control: no-store

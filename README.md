@@ -15,6 +15,8 @@ Test card: `4084 0840 8408 4081`, any future expiry, CVV `408`. No real money mo
 - Loyalty points: 1 point per ₦100, computed by a Postgres trigger on approved orders only.
 - "My orders" page: order history with status (✓ approved, ✗ rejected, ● pending) and points.
 - FAQ chatbot (Gemini) with structured output; an order intent in the chat pre-fills the form.
+- **Kitchen board** (`staff.html`, unlinked): staff log in with the same accounts and see today's orders with payment state, phone/WhatsApp links and address; they move each order New → Preparing → Out for delivery → Delivered (or Cancel). Unpaid orders cannot be started. Refreshes every 30 s.
+- Responsive: phone, tablet (both orientations) and desktop; per-page photo backgrounds; cross-page view transitions where the browser supports them.
 
 ## How a payment flows
 
@@ -54,6 +56,8 @@ Orders are created and their status changed only by the server functions, using 
 - **Logged-in orders are attributed from the access token**, verified server-side against Supabase Auth — not from a user id sent by the browser.
 - **The confirmation URL leaks nothing**: `verify-payment` returns item/amount only; name, phone and address are kept in the customer's own browser for the WhatsApp message.
 - Points are set by a `BEFORE INSERT OR UPDATE` trigger that overwrites any client-supplied value.
+- **Staff access is a server-side lookup.** The staff list is its own table with RLS on and *no* policies (browser roles revoked), so nothing in the browser can read or grant it. `staff-orders.mjs` verifies the access token with Supabase Auth, checks the id against that table with the secret key, and only then reads or updates orders. It never writes the payment `status`; kitchen progress is a separate column, and updates are conditional on the state the staff member saw (two phones cannot both "win").
+- **Browser hardening**: `_headers` sets a Content-Security-Policy (scripts only from this site and the pinned CDN bundle, network only to Supabase and our functions, no framing), `X-Content-Type-Options`, `Referrer-Policy` and `Permissions-Policy`; `staff.html` and the functions are `no-store` and `noindex`. supabase-js is pinned to an exact version with a Subresource Integrity hash.
 
 ## Repository layout
 
@@ -61,11 +65,14 @@ Orders are created and their status changed only by the server functions, using 
 index.html                       order form, checkout, payment result panel, chat widget
 auth.js                          login / signup / forgot / reset password (Supabase Auth)
 orders.html, orders.js           "My orders" page
+staff.html, staff.js             kitchen board (staff only; not linked from the site)
 style.css
+_headers                         security headers (CSP etc.) applied by Netlify
 Netlify/functions/pay.mjs        price + save order + Paystack initialize
 Netlify/functions/paystack-webhook.mjs   verify signature + amount → approve
 Netlify/functions/verify-payment.mjs     "is this paid?" for the return page (+ declined → rejected)
 Netlify/functions/chat.js        Gemini FAQ bot
+Netlify/functions/staff-orders.mjs       staff check + list/update orders for the kitchen board
 sql/                             schema changes applied to the Supabase project, in order
 netlify.toml                     functions directory
 ```
@@ -77,7 +84,7 @@ Netlify → Site configuration → Environment variables (Production scope):
 | Variable | Used by |
 |---|---|
 | `PAYSTACK_SECRET_KEY` | `pay.mjs`, `paystack-webhook.mjs`, `verify-payment.mjs` |
-| `SUPABASE_SECRET_KEY` | `pay.mjs`, `paystack-webhook.mjs`, `verify-payment.mjs` |
+| `SUPABASE_SECRET_KEY` | `pay.mjs`, `paystack-webhook.mjs`, `verify-payment.mjs`, `staff-orders.mjs` |
 | `GEMINI_API_KEY` | `chat.js` |
 
 Paystack → Settings → API Keys & Webhooks → **Webhook URL**:
