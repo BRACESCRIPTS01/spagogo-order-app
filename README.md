@@ -3,7 +3,7 @@
 Ordering and payment site for **Fatima Spagogo**, a small spaghetti-delivery kitchen in Ibafo & Mowe, Ogun State, Nigeria.
 A customer picks a meal, pays by card / bank transfer / USSD, and the kitchen receives a **paid** order on WhatsApp — no unpaid orders, no price set by the browser.
 
-**Live demo (Paystack test mode):** https://lustrous-meerkat-6dc043.netlify.app
+**Live demo (Paystack test mode):** (https://spagogofoodapp.netlify.app/)
 Test card: `4084 0840 8408 4081`, any future expiry, CVV `408`. No real money moves.
 
 ## What it does
