@@ -15,7 +15,9 @@
     var loginMsg  = document.getElementById("staffLoginMessage");
     var loginBtn  = document.getElementById("staffLoginBtn");
     var board     = document.getElementById("staffBoard");
-    var listEl    = document.getElementById("staffList");
+    var colNew    = document.getElementById("col-new");
+    var colPrep   = document.getElementById("col-preparing");
+    var colDone   = document.getElementById("col-done");
     var countEl   = document.getElementById("staffCount");
     var msgEl     = document.getElementById("staffMessage");
     var onlyOpen  = document.getElementById("staffOnlyOpen");
@@ -138,13 +140,24 @@
         });
         countEl.textContent = shown.length + (shown.length === 1 ? " order" : " orders") +
             (range === "today" ? " today" : "") + (open && shown.length !== orders.length ? " (" + (orders.length - shown.length) + " closed hidden)" : "");
-        listEl.textContent = "";
+        colNew.textContent = "";
+        colPrep.textContent = "";
+        colDone.textContent = "";
         if (shown.length === 0) {
             var empty = el("li", "staffEmpty", range === "today" ? "No orders yet today." : "No orders.");
-            listEl.appendChild(empty);
+            colNew.appendChild(empty);
             return;
         }
-        shown.forEach(function (o) { listEl.appendChild(renderOrder(o)); });
+        shown.forEach(function (o) { 
+            var node = renderOrder(o);
+            if (o.kitchen_status === "new" || o.kitchen_status === "cancelled") {
+                colNew.appendChild(node);
+            } else if (o.kitchen_status === "preparing") {
+                colPrep.appendChild(node);
+            } else {
+                colDone.appendChild(node);
+            }
+        });
     }
 
     function renderOrder(o) {

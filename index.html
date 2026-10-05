@@ -5,20 +5,51 @@
         <title>Spagogo Order form</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <link rel="icon" type="image/svg+xml" href="logo.svg">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="style.css">
         </head>
         <body>
-            <header class="siteHeader">
-                <img src="logo.svg" alt="Fatima Spagogo" width="56" height="56">
-                <h1>Fatima Spagogo</h1>
-                <p>Spicy spaghetti, delivered hot to Ibafo &amp; Mowe.</p>
-                                <div class="accountBar">
-                    <span id="accountStatus"></span>
-                    <button type="button" id="accountBtn">Log in / Sign up</button>
-                                        <a id="myOrdersLink" class="hidden" href="orders.html">My orders</a>
-                    <button type="button" id="logoutBtn" class="hidden">Log out</button>
+            <section class="hero">
+                <div class="hero-overlay"></div>
+                <div class="hero-content">
+                    <img src="logo.svg" alt="Fatima Spagogo" width="64" height="64" class="hero-logo">
+                    <h1 class="hero-title">Fatima Spagogo</h1>
+                    <p class="hero-subtitle">Crave-worthy spicy spaghetti, delivered hot to your door in Ibafo &amp; Mowe.</p>
+                    <div class="accountBar">
+                        <span id="accountStatus"></span>
+                        <button type="button" id="accountBtn">Log in / Sign up</button>
+                        <a id="myOrdersLink" class="hidden" href="orders.html">My orders</a>
+                        <button type="button" id="logoutBtn" class="hidden">Log out</button>
+                    </div>
                 </div>
-            </header>
+            </section>
+
+            <div class="trust-strip">
+                <div class="trust-badge">
+                    <span class="trust-icon">🕒</span>
+                    <div class="trust-text">
+                        <strong>Fast Delivery</strong>
+                        <span>30–45 mins avg.</span>
+                    </div>
+                </div>
+                <div class="trust-badge">
+                    <span class="trust-icon">🔥</span>
+                    <div class="trust-text">
+                        <strong>Arrives Hot</strong>
+                        <span>Insulated packaging</span>
+                    </div>
+                </div>
+                <div class="trust-badge">
+                    <span class="trust-icon">⭐</span>
+                    <div class="trust-text">
+                        <strong>4.9 / 5 Rating</strong>
+                        <span>Loved in Ibafo &amp; Mowe</span>
+                    </div>
+                </div>
+            </div>
+
             <dialog id="authDialog">
                 <form id="authForm">
                     <div class="authHeader">
@@ -71,18 +102,57 @@
                                     </select>
                                     <small class="fieldNote">Ibafo: free delivery. Mowe: from ₦500, extra distance settled on WhatsApp.</small>
                                     </div>
-                                    <div>
-                                        <label for="menuItem">Menu Item:</label>
-                                        <select id="menuItem" name="menuItem">
-                                            <option value="item1">Spicy Spaghetti + Beef + Egg - ₦1,500</option>
-                                            <option value="item2">Spicy Spaghetti + Peppered stir-Fry Chicken(meduim) + Egg - ₦2,000</option>
-                                            <option value="item3">Spicy Spaghetti + Peppered stir-Fry Chicken(Big) + Egg - ₦2,500</option>
-                                            </select>
+                                        <fieldset class="menu-selection">
+                                            <legend>Select Menu Item:</legend>
+                                            <div class="menu-cards">
+                                                <label class="menu-card">
+                                                    <input type="radio" name="menuItem" value="item1" checked>
+                                                    <div class="card-content">
+                                                        <img src="menu-beef.jpg" alt="Spicy Spaghetti with Beef and Egg" class="card-img" width="100" height="100" loading="lazy">
+                                                        <div class="card-text">
+                                                            <span class="card-title">Beef + Egg</span>
+                                                            <span class="card-desc">Spicy Spaghetti</span>
+                                                            <span class="card-price">₦1,500</span>
+                                                        </div>
+                                                    </div>
+                                                </label>
+                                                <label class="menu-card">
+                                                    <input type="radio" name="menuItem" value="item2">
+                                                    <div class="card-content">
+                                                        <img src="menu-chicken-med.jpg" alt="Spicy Spaghetti with Medium Chicken and Egg" class="card-img" width="100" height="100" loading="lazy">
+                                                        <div class="card-text">
+                                                            <span class="card-title">Chicken (Medium) + Egg</span>
+                                                            <span class="card-desc">Spicy Spaghetti</span>
+                                                            <span class="card-price">₦2,000</span>
+                                                        </div>
+                                                    </div>
+                                                </label>
+                                                <label class="menu-card">
+                                                    <input type="radio" name="menuItem" value="item3">
+                                                    <div class="card-content">
+                                                        <img src="menu-chicken-big.jpg" alt="Spicy Spaghetti with Big Chicken and Egg" class="card-img" width="100" height="100" loading="lazy">
+                                                        <div class="card-text">
+                                                            <span class="card-title">Chicken (Big) + Egg</span>
+                                                            <span class="card-desc">Spicy Spaghetti</span>
+                                                            <span class="card-price">₦2,500</span>
+                                                        </div>
+                                                    </div>
+                                                </label>
                                             </div>
+                                        </fieldset>
                                             <div>
-                                            <label for="quantity">Quantity:</label>
-                                            <input type="number" id="quantity" name="quantity" min="1" value="1">
-                                            <button type="button" id="submitOrder">Place Order</button>
+                                                <label for="quantity">Quantity:</label>
+                                                <input type="number" id="quantity" name="quantity" min="1" value="1">
+                                            </div>
+                                            
+                                            <div class="order-summary-sticky">
+                                                <div id="formError" class="formError" style="display: none; color: #B3261E; margin-bottom: 12px; font-weight: 500;"></div>
+                                                <div class="total-row">
+                                                    <span>Total:</span>
+                                                    <strong id="displayTotal">₦1,500</strong>
+                                                </div>
+                                                <button type="button" id="submitOrder">Place Order</button>
+                                            </div>
                         </form>
                         <div id="chatWidget">
     <button type="button" id="chatToggleBtn" aria-label="Chat with us">💬 Ask a question</button>
@@ -98,277 +168,10 @@
         </div>
     </div>
 </div>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.min.js" integrity="sha384-JBR+x8blGwjDRO63aHCGiZMD4VNiTR4ZUGA+N6ZKLf3zNt1fK8IBpcgPaMrxqWBp" crossorigin="anonymous"></script>                        <script>
-                            const supabaseUrl = "https://secpyyvdokaidzkstbqm.supabase.co";
-                            const supabaseKey = "sb_publishable_8tDy1gTILSX3CVCNTcyF1g_toSX7sr8";
-                            const supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
-                            document.getElementById("submitOrder").addEventListener("click", async function() {
-                                var submitBtn = this;
-                                var name = document.getElementById("customerName").value.trim();
-                                var phone = document.getElementById("customerPhone").value.trim();
-                                var email = document.getElementById("customerEmail").value.trim();
-                                var address = document.getElementById("deliveryAddress").value.trim();
-                                var zone = document.getElementById("deliveryZone").value;
-                                var item = document.getElementById("menuItem").value;
-                                var quantity = document.getElementById("quantity").value;
-                                if (name === "" || phone === "" || address === "") {
-                                    alert("please fill in your name, phone number, and address before placing order.");
-                                    return;
-                                }
-                                var phonePattern = /^[0-9]{10,11}$/;
-                                if (!phonePattern.test(phone)) {
-                                    alert("please enter a valid phone number (10-11 digits, no letters or symbols).");
-                                    return;
-                                }
-                                // Logged in? Send the access token so the server can attach the order to
-                                // the account (and use the account email if the email box is empty).
-                                var sessionRes = await supabaseClient.auth.getSession();
-                                var session = sessionRes.data.session;
-                                if (email === "" && !session) {
-                                    alert("please enter your email address so we can send your payment receipt.");
-                                    return;
-                                }
-                                var headers = { "Content-Type": "application/json" };
-                                if (session) headers["Authorization"] = "Bearer " + session.access_token;
-                                submitBtn.disabled = true;
-                                submitBtn.textContent = "Starting payment\u2026";
-                                var result = null;
-                                try {
-                                    // The server prices the order (menu + delivery fee), saves it as
-                                    // 'pending' and asks Paystack for a checkout link.
-                                    var res = await fetch("/.netlify/functions/pay", {
-                                        method: "POST",
-                                        headers: headers,
-                                        body: JSON.stringify({
-                                            name: name, phone: phone, email: email, address: address,
-                                            zone: zone, item: item, quantity: quantity
-                                        })
-                                    });
-                                    result = await res.json();
-                                    if (!res.ok) throw new Error(result.error || "HTTP " + res.status);
-                                } catch (err) {
-                                    console.error("Error starting payment:", err);
-                                    submitBtn.disabled = false;
-                                    submitBtn.textContent = "Place Order";
-                                    alert("Sorry, we couldn't start your payment. " + (err.message || "") + "\nPlease try again or message us on WhatsApp.");
-                                    return;
-                                }
-                                // Keep the delivery details on this device for the WhatsApp message after
-                                // payment. The server never sends them back (the reference ends up in a URL).
-                                try {
-                                    localStorage.setItem("spagogo-order-" + result.reference,
-                                        JSON.stringify({ name: name, phone: phone, address: address }));
-                                } catch (e) { /* storage blocked: the WhatsApp message asks for details instead */ }
-                                // Off to Paystack. After paying, Paystack sends the customer back here.
-                                // The order is confirmed by Paystack's webhook (not by this page), and the
-                                // WhatsApp message to the kitchen is only sent once that confirmation lands.
-                                window.location.assign(result.url);
-                            });
-                            // If the customer presses Back from the Paystack page, the browser may restore
-                            // this page from memory with the button still disabled. Reset it.
-                            window.addEventListener("pageshow", function (e) {
-                                if (!e.persisted) return;
-                                var btn = document.getElementById("submitOrder");
-                                btn.disabled = false;
-                                btn.textContent = "Place Order";
-                            });
-
-                            // ---- Back from Paystack --------------------------------------------------
-                            // Paystack returns the customer to /?trxref=...&reference=... . We ask our
-                            // server whether that order is really paid (it checks with Paystack and the
-                            // webhook's result) and only then show the WhatsApp button. Nothing here
-                            // trusts the URL: a made-up reference just gets "not paid".
-                            (function () {
-                                var params = new URLSearchParams(window.location.search);
-                                var reference = params.get("reference") || params.get("trxref");
-                                if (!reference) return;
-                                var panel = document.getElementById("paymentResult");
-                                var titleEl = document.getElementById("paymentTitle");
-                                var textEl = document.getElementById("paymentText");
-                                var hintEl = document.getElementById("paymentHint");
-                                var waLink = document.getElementById("whatsappLink");
-                                var closeBtn = document.getElementById("paymentCloseBtn");
-                                var attempts = 0;
-
-                                function show(state, title, text, hint) {
-                                    panel.className = "paymentResult pay-" + state;
-                                    titleEl.textContent = title;
-                                    textEl.textContent = text;
-                                    hintEl.textContent = hint || "";
-                                    panel.scrollIntoView({ behavior: "smooth", block: "start" });
-                                }
-                                function naira(kobo) { return "\u20a6" + (kobo / 100).toLocaleString("en-NG"); }
-                                function savedDetails() {
-                                    try { return JSON.parse(localStorage.getItem("spagogo-order-" + reference)) || null; }
-                                    catch (e) { return null; }
-                                }
-                                function whatsappMessage(order) {
-                                    var d = savedDetails();
-                                    var lines = [
-                                        "*PAID ORDER*",
-                                        "Order #" + order.id,
-                                        "Item: " + order.item,
-                                        "Quantity: " + order.quantity,
-                                        "Zone: " + order.zone,
-                                        "Total paid: " + naira(order.amount),
-                                        "Paystack ref: " + reference
-                                    ];
-                                    if (d && d.name) {
-                                        lines.push("Name: " + d.name, "Phone: " + d.phone, "Address: " + d.address);
-                                    } else {
-                                        lines.push("Name / phone / address: (typing them below)");
-                                    }
-                                    return "https://wa.me/2347055076189?text=" + encodeURIComponent(lines.join("\n"));
-                                }
-                                function check() {
-                                    attempts += 1;
-                                    fetch("/.netlify/functions/verify-payment?reference=" + encodeURIComponent(reference))
-                                    .then(function (res) { return res.json().then(function (data) { return { ok: res.ok, data: data }; }); })
-                                    .then(function (r) {
-                                        var d = r.data || {};
-                                        if (!r.ok) throw new Error(d.error || "verify failed");
-                                        if (d.status === "paid") {
-                                            show("paid", "Payment received \u2705",
-                                                "Order #" + d.order.id + " \u2014 " + d.order.quantity + " \u00d7 " + d.order.item + " \u2014 " + naira(d.order.amount) + " paid.",
-                                                "Last step: tap the button so the kitchen gets your order and delivery details on WhatsApp.");
-                                            waLink.href = whatsappMessage(d.order);
-                                            waLink.classList.remove("hidden");
-                                            if (!savedDetails()) {
-                                                hintEl.textContent = "Tap the button, then type your name, phone number and address into the chat (we couldn\u2019t recover them on this device).";
-                                            }
-                                        } else if (d.status === "failed") {
-                                            show("failed", "Payment didn\u2019t go through \u2716",
-                                                "Your bank declined the payment" + (d.reason ? " (" + d.reason + ")" : "") + ". Nothing was charged and the kitchen has not been notified.",
-                                                "You can place the order again below with another card.");
-                                        } else if (d.status === "error") {
-                                            show("error", "We need to check this payment",
-                                                "The amount Paystack reported doesn\u2019t match order #" + d.order.id + ". Please don\u2019t pay again.",
-                                                "Message us on WhatsApp with reference " + reference + " and we\u2019ll sort it out.");
-                                        } else if (attempts < 4) {
-                                            show("pending", "Confirming your payment\u2026", "This usually takes a few seconds.", "");
-                                            setTimeout(check, 2500);
-                                        } else {
-                                            show("pending", "Payment not confirmed yet",
-                                                "We haven\u2019t received a payment for order #" + d.order.id + ". If you did pay, wait a minute and refresh this page.",
-                                                "Otherwise you can place the order again below.");
-                                        }
-                                    })
-                                    .catch(function (err) {
-                                        console.error("verify-payment:", err);
-                                        show("error", "Couldn\u2019t check the payment",
-                                            "Please refresh this page in a moment. If you paid, your money is safe: the order is confirmed automatically on our side.",
-                                            "Reference: " + reference);
-                                    });
-                                }
-                                closeBtn.addEventListener("click", function () {
-                                    panel.classList.add("hidden");
-                                    try { localStorage.removeItem("spagogo-order-" + reference); } catch (e) { /* ignore */ }
-                                    history.replaceState(null, "", window.location.pathname);
-                                });
-                                // Tidy the address bar, but keep the reference for retries/refresh via the closure.
-                                if (params.has("trxref") || params.has("reference")) {
-                                    history.replaceState(null, "", window.location.pathname + "?reference=" + encodeURIComponent(reference));
-                                }
-                                panel.classList.remove("hidden");
-                                show("pending", "Confirming your payment\u2026", "This usually takes a few seconds.", "");
-                                check();
-                            })();
-                            </script>
-                            <script>
-(function () {
-    var CHAT_ENDPOINT = "/.netlify/functions/chat";
-
-    var toggleBtn = document.getElementById("chatToggleBtn");
-    var closeBtn = document.getElementById("chatCloseBtn");
-    var chatWindow = document.getElementById("chatWindow");
-    var messagesEl = document.getElementById("chatMessages");
-    var inputEl = document.getElementById("chatInput");
-    var sendBtn = document.getElementById("chatSendBtn");
-
-    toggleBtn.addEventListener("click", function () {
-        chatWindow.classList.toggle("hidden");
-    });
-    closeBtn.addEventListener("click", function () {
-        chatWindow.classList.add("hidden");
-    });
-
-    function addMessage(text, sender) {
-        var div = document.createElement("div");
-        div.className = "chatMsg " + sender;
-        div.textContent = text;
-        messagesEl.appendChild(div);
-        messagesEl.scrollTop = messagesEl.scrollHeight;
-    }
-
-    function showTyping() {
-    var div = document.createElement("div");
-    div.className = "chatMsg bot typing";
-    div.id = "typingIndicator";
-    div.innerHTML = "<span class=\"dot\"></span><span class=\"dot\"></span><span class=\"dot\"></span>";
-    messagesEl.appendChild(div);
-    messagesEl.scrollTop = messagesEl.scrollHeight;
-}
-
-function hideTyping() {
-    var el = document.getElementById("typingIndicator");
-    if (el) el.remove();
-}
-
-function handleOrderHandoff(item, quantity) {
-    var form = document.getElementById("orderForm");
-    if (!form) return;
-
-    if (["item1", "item2", "item3"].indexOf(item) !== -1) {
-        document.getElementById("menuItem").value = item;
-    }
-    if (Number.isInteger(quantity) && quantity > 0) {
-        document.getElementById("quantity").value = quantity;
-    }
-
-    form.scrollIntoView({ behavior: "smooth", block: "center" });
-    form.classList.add("formHighlight");
-    setTimeout(function () {
-        form.classList.remove("formHighlight");
-    }, 3000);
-}
-
-function sendMessage() {
-    var text = inputEl.value.trim();
-    if (!text) return;
-    addMessage(text, "user");
-    inputEl.value = "";
-    sendBtn.disabled = true;
-    showTyping();
-
-    fetch(CHAT_ENDPOINT, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message: text })
-    })
-    .then(function (res) { return res.json(); })
-    .then(function (data) {
-        hideTyping();
-        sendBtn.disabled = false;
-        addMessage(data.reply || "Sorry, something went wrong. Please try WhatsApp instead.", "bot");
-        if (data.orderIntent && data.item && data.item !== "unknown") {
-            handleOrderHandoff(data.item, data.quantity);
-        }
-    })
-    .catch(function () {
-        hideTyping();
-        sendBtn.disabled = false;
-        addMessage("Sorry, I couldn't reach the assistant. Please try WhatsApp instead.", "bot");
-    });
-}
-sendBtn.addEventListener("click", sendMessage);
-inputEl.addEventListener("keydown", function (e) {
-    if (e.key === "Enter") {
-        e.preventDefault();
-        sendMessage();
-    }
-});
-})();
-</script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.min.js" integrity="sha384-JBR+x8blGwjDRO63aHCGiZMD4VNiTR4ZUGA+N6ZKLf3zNt1fK8IBpcgPaMrxqWBp" crossorigin="anonymous"></script>
+<script src="supabase-init.js"></script>
+<script src="main.js"></script>
+<script src="chat-widget.js"></script>
                            
                                                 <script src="auth.js"></script>
                                                 </body>

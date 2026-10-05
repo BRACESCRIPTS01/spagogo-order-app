@@ -6,6 +6,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <meta name="robots" content="noindex">
         <link rel="icon" type="image/svg+xml" href="logo.svg">
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Outfit:wght@500;700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="style.css">
     </head>
     <body class="staffPage">
@@ -44,14 +47,24 @@
                 </div>
             </div>
             <p id="staffMessage" class="staffMessage" aria-live="polite"></p>
-            <ul id="staffList" class="staffList"></ul>
+            <div id="staffKanban" class="staffKanban">
+                <div class="kanban-column">
+                    <h2>New / Pending</h2>
+                    <ul id="col-new" class="staffList"></ul>
+                </div>
+                <div class="kanban-column">
+                    <h2>Preparing</h2>
+                    <ul id="col-preparing" class="staffList"></ul>
+                </div>
+                <div class="kanban-column">
+                    <h2>Done / Delivering</h2>
+                    <ul id="col-done" class="staffList"></ul>
+                </div>
+            </div>
         </section>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.min.js" integrity="sha384-JBR+x8blGwjDRO63aHCGiZMD4VNiTR4ZUGA+N6ZKLf3zNt1fK8IBpcgPaMrxqWBp" crossorigin="anonymous"></script>        <script>
-            const supabaseUrl = "https://secpyyvdokaidzkstbqm.supabase.co";
-            const supabaseKey = "sb_publishable_8tDy1gTILSX3CVCNTcyF1g_toSX7sr8";
-            const supabaseClient = window.supabase.createClient(supabaseUrl, supabaseKey);
-        </script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.min.js" integrity="sha384-JBR+x8blGwjDRO63aHCGiZMD4VNiTR4ZUGA+N6ZKLf3zNt1fK8IBpcgPaMrxqWBp" crossorigin="anonymous"></script>
+        <script src="supabase-init.js"></script>
         <script src="staff.js"></script>
         </body>
 </html>
