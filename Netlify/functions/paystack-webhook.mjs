@@ -6,7 +6,7 @@
 //
 // Register it once in the Paystack dashboard (test mode):
 //   Settings > API Keys & Webhooks > Test Webhook URL
-//   https://lustrous-meerkat-6dc043.netlify.app/.netlify/functions/paystack-webhook
+//  https://spagogofoodapp.netlify.app/.netlify/functions/paystack-webhook
 //
 // Every delivery goes through these checks, in order. Any failure = NOT approved.
 //   1. x-paystack-signature equals HMAC-SHA512(raw request body, PAYSTACK_SECRET_KEY)
