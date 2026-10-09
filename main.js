@@ -1,13 +1,22 @@
-// Price Calculation Logic
 function updateTotal() {
     var prices = { "item1": 1500, "item2": 2000, "item3": 2500 };
+    var fees = { "ibafo": 0, "Mowe": 500 };
     var item = document.querySelector('input[name="menuItem"]:checked').value;
     var quantity = parseInt(document.getElementById("quantity").value, 10) || 1;
-    var total = prices[item] * quantity;
-    document.getElementById("displayTotal").textContent = "₦" + total.toLocaleString("en-NG");
+    var zone = document.getElementById("deliveryZone").value;
+    var food = prices[item] * quantity;
+    var fee = fees[zone] || 0;
+    var total = food + fee;
+    var text = "₦" + food.toLocaleString("en-NG");
+    if (fee > 0) {
+        text = "₦" + food.toLocaleString("en-NG") + " + ₦" + fee.toLocaleString("en-NG") + " delivery = ₦" + total.toLocaleString("en-NG");
+    }
+    document.getElementById("displayTotal").textContent = text;
 }
-document.querySelectorAll('input[name="menuItem"]').forEach(radio => radio.addEventListener('change', updateTotal));
-document.getElementById("quantity").addEventListener('input', updateTotal);
+document.querySelectorAll('input[name="menuItem"]').forEach(function (radio) { radio.addEventListener("change", updateTotal); });
+document.getElementById("quantity").addEventListener("input", updateTotal);
+document.getElementById("deliveryZone").addEventListener("change", updateTotal);
+updateTotal();
 
 document.getElementById("submitOrder").addEventListener("click", async function() {
     var submitBtn = this;
