@@ -144,7 +144,29 @@
                                                 <label for="quantity">Quantity:</label>
                                                 <input type="number" id="quantity" name="quantity" min="1" value="1">
                                             </div>
-                                            
+                                        <fieldset class="menu-selection">
+                                            <legend>Pay with:</legend>
+                                            <div class="menu-cards">
+                                                <label class="menu-card">
+                                                    <input type="radio" name="payMethod" value="paystack" checked>
+                                                    <div class="card-content">
+                                                        <div class="card-text">
+                                                            <span class="card-title">Paystack</span>
+                                                            <span class="card-desc">Nigerian cards, bank transfer, USSD</span>
+                                                        </div>
+                                                    </div>
+                                                </label>
+                                                <label class="menu-card">
+                                                    <input type="radio" name="payMethod" value="stripe">
+                                                    <div class="card-content">
+                                                        <div class="card-text">
+                                                            <span class="card-title">International card (Stripe)</span>
+                                                            <span class="card-desc">Test mode, no real charge. Use card 4242 4242 4242 4242, any future date, any CVC.</span>
+                                                        </div>
+                                                    </div>
+                                                </label>
+                                            </div>
+                                        </fieldset>                                            
                                             <div class="order-summary-sticky">
                                                 <div id="formError" class="formError" style="display: none; color: #B3261E; margin-bottom: 12px; font-weight: 500;"></div>
                                                 <div class="total-row">
