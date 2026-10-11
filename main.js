@@ -42,6 +42,8 @@ document.getElementById("submitOrder").addEventListener("click", async function(
     var zone = document.getElementById("deliveryZone").value;
     var item = document.querySelector('input[name="menuItem"]:checked').value;
     var quantity = document.getElementById("quantity").value;
+    var payMethod = document.querySelector('input[name="payMethod"]:checked');
+    var provider = payMethod && payMethod.value === "stripe" ? "stripe" : "paystack";
     if (name === "" || phone === "" || address === "") {
         showError("Please fill in your name, phone number, and address before placing order.");
         return;
@@ -66,8 +68,9 @@ document.getElementById("submitOrder").addEventListener("click", async function(
     var result = null;
     try {
         // The server prices the order (menu + delivery fee), saves it as
-        // 'pending' and asks Paystack for a checkout link.
-        var res = await fetch("/.netlify/functions/pay", {
+        // 'pending' and asks the chosen provider for a checkout link.
+        var endpoint = provider === "stripe" ? "/.netlify/functions/stripe-checkout" : "/.netlify/functions/pay";
+        var res = await fetch(endpoint, {
             method: "POST",
             headers: headers,
             body: JSON.stringify({
@@ -90,12 +93,12 @@ document.getElementById("submitOrder").addEventListener("click", async function(
         localStorage.setItem("spagogo-order-" + result.reference,
             JSON.stringify({ name: name, phone: phone, address: address, expires: Date.now() + 30*60*1000 }));
     } catch (e) { /* storage blocked: the WhatsApp message asks for details instead */ }
-    // Off to Paystack. After paying, Paystack sends the customer back here.
-    // The order is confirmed by Paystack's webhook (not by this page), and the
-    // WhatsApp message to the kitchen is only sent once that confirmation lands.
+    // Off to the payment page (Paystack or Stripe). After paying, the customer is
+    // sent back here. The order is confirmed by the provider's webhook (not by this
+    // page), and the WhatsApp message to the kitchen is only sent once that lands.
     window.location.assign(result.url);
 });
-// If the customer presses Back from the Paystack page, the browser may restore
+// If the customer presses Back from the payment page, the browser may restore
 // this page from memory with the button still disabled. Reset it.
 window.addEventListener("pageshow", function (e) {
     if (!e.persisted) return;
@@ -104,15 +107,20 @@ window.addEventListener("pageshow", function (e) {
     btn.textContent = "Place Order";
 });
 
-// ---- Back from Paystack --------------------------------------------------
-// Paystack returns the customer to /?trxref=...&reference=... . We ask our
-// server whether that order is really paid (it checks with Paystack and the
-// webhook's result) and only then show the WhatsApp button. Nothing here
-// trusts the URL: a made-up reference just gets "not paid".
+// ---- Back from the payment page -------------------------------------------
+// Paystack returns the customer to /?trxref=...&reference=... and Stripe to
+// /?session_id=cs_... . We ask our server whether that order is really paid (it
+// checks with the provider and the webhook's result) and only then show the
+// WhatsApp button. Nothing here trusts the URL: a made-up id just gets "not paid".
 (function () {
     var params = new URLSearchParams(window.location.search);
-    var reference = params.get("reference") || params.get("trxref");
+    var provider = params.has("session_id") ? "stripe" : "paystack";
+    var providerName = provider === "stripe" ? "Stripe" : "Paystack";
+    var reference = provider === "stripe" ? params.get("session_id") : (params.get("reference") || params.get("trxref"));
     if (!reference) return;
+    var verifyUrl = provider === "stripe"
+        ? "/.netlify/functions/verify-stripe?session_id=" + encodeURIComponent(reference)
+        : "/.netlify/functions/verify-payment?reference=" + encodeURIComponent(reference);
     var panel = document.getElementById("paymentResult");
     var titleEl = document.getElementById("paymentTitle");
     var textEl = document.getElementById("paymentText");
@@ -149,7 +157,7 @@ window.addEventListener("pageshow", function (e) {
             "Quantity: " + order.quantity,
             "Zone: " + order.zone,
             "Total paid: " + naira(order.amount),
-            "Paystack ref: " + reference
+            (provider === "stripe" ? "Stripe session: " : "Paystack ref: ") + reference
         ];
         if (d && d.name) {
             lines.push("Name: " + d.name, "Phone: " + d.phone, "Address: " + d.address);
@@ -160,7 +168,7 @@ window.addEventListener("pageshow", function (e) {
     }
     function check() {
         attempts += 1;
-        fetch("/.netlify/functions/verify-payment?reference=" + encodeURIComponent(reference))
+        fetch(verifyUrl)
         .then(function (res) { return res.json().then(function (data) { return { ok: res.ok, data: data }; }); })
         .then(function (r) {
             var d = r.data || {};
@@ -176,11 +184,11 @@ window.addEventListener("pageshow", function (e) {
                 }
             } else if (d.status === "failed") {
                 show("failed", "Payment didn\u2019t go through \u2716",
-                    "Your bank declined the payment" + (d.reason ? " (" + d.reason + ")" : "") + ". Nothing was charged and the kitchen has not been notified.",
+                    "The payment didn\u2019t complete" + (d.reason ? " (" + d.reason + ")" : "") + ". Nothing was charged and the kitchen has not been notified.",
                     "You can place the order again below with another card.");
             } else if (d.status === "error") {
                 show("error", "We need to check this payment",
-                    "The amount Paystack reported doesn\u2019t match order #" + d.order.id + ". Please don\u2019t pay again.",
+                    "The amount " + providerName + " reported doesn\u2019t match order #" + d.order.id + ". Please don\u2019t pay again.",
                     "Message us on WhatsApp with reference " + reference + " and we\u2019ll sort it out.");
             } else if (attempts < 4) {
                 show("pending", "Confirming your payment\u2026", "This usually takes a few seconds.", "");
@@ -192,7 +200,7 @@ window.addEventListener("pageshow", function (e) {
             }
         })
         .catch(function (err) {
-            console.error("verify-payment:", err);
+            console.error("verify:", err);
             show("error", "Couldn\u2019t check the payment",
                 "Please refresh this page in a moment. If you paid, your money is safe: the order is confirmed automatically on our side.",
                 "Reference: " + reference);
@@ -203,10 +211,8 @@ window.addEventListener("pageshow", function (e) {
         try { localStorage.removeItem("spagogo-order-" + reference); } catch (e) { /* ignore */ }
         history.replaceState(null, "", window.location.pathname);
     });
-    // Tidy the address bar, but keep the reference for retries/refresh via the closure.
-    if (params.has("trxref") || params.has("reference")) {
-        history.replaceState(null, "", window.location.pathname + "?reference=" + encodeURIComponent(reference));
-    }
+    // Tidy the address bar, but keep the id for retries/refresh via the closure.
+    history.replaceState(null, "", window.location.pathname + (provider === "stripe" ? "?session_id=" : "?reference=") + encodeURIComponent(reference));
     panel.classList.remove("hidden");
     show("pending", "Confirming your payment\u2026", "This usually takes a few seconds.", "");
     check();
