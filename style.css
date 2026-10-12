@@ -759,3 +759,26 @@ html, body { -ms-overflow-style: none; scrollbar-width: none; }
     .staffKanban { gap: 14px; }
     .kanban-column { flex-basis: 100%; min-width: 0; }
 }
+
+.notFound {
+    max-width: 400px;
+    margin: 0 auto;
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: var(--space-4);
+    text-align: center;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+.notFound p { margin: 0 0 var(--space-3); color: var(--text-secondary); }
+.notFoundHome {
+    display: inline-block;
+    background-color: var(--primary);
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+    padding: 14px 24px;
+    border-radius: 50px;
+}
+.notFoundHome:hover { background-color: var(--primary-hover); }
+.trust-text strong, .trust-text span { text-wrap: balance; }
