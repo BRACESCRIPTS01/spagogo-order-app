@@ -17,8 +17,32 @@
         <link rel="canonical" href="https://spagogofoodapp.netlify.app/">
         <link rel="icon" type="image/svg+xml" href="logo.svg">        
         <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="/layout.css">
         </head>
         <body>
+  <a class="skipLink" href="#orderForm">Skip to content</a>
+  <header class="siteNav">
+    <div class="siteNav-inner">
+      <a href="/" class="siteNav-brand">
+        <img src="/logo.svg" alt="Fatima Spagogo" width="36" height="36">
+        <span>Fatima Spagogo</span>
+      </a>
+      <button type="button" class="siteNav-burger" aria-expanded="false" aria-controls="siteNavLinks" aria-label="Toggle navigation">
+        <span class="siteNav-burgerBar"></span>
+        <span class="siteNav-burgerBar"></span>
+        <span class="siteNav-burgerBar"></span>
+      </button>
+      <nav id="siteNavLinks" class="siteNav-links">
+        <a href="/menu" class="siteNav-link">Menu</a>
+        <a href="/delivery" class="siteNav-link">Delivery</a>
+        <a href="/about" class="siteNav-link">About</a>
+        <a href="/faq" class="siteNav-link">FAQ</a>
+        <a href="/contact" class="siteNav-link">Contact</a>
+        <a href="/orders" class="siteNav-link">My orders</a>
+        <a href="/#orderForm" class="siteNav-btn">Order now</a>
+      </nav>
+    </div>
+  </header>
             <section class="hero">
                 <div class="hero-overlay"></div>
                 <div class="hero-content">
@@ -53,7 +77,7 @@
                     <span class="trust-icon">🔒</span>
                     <div class="trust-text">
                         <strong>Pay on the site</strong>
-                        <span>Card, transfer or USSD via Paystack</span>
+                        <span>Paystack, or international cards via Stripe</span>
                     </div>
                 </div>
             </div>
@@ -198,11 +222,54 @@
         </div>
     </div>
 </div>
+  <footer class="siteFooter">
+    <div class="siteFooter-inner">
+      <div class="siteFooter-grid">
+        <div class="siteFooter-col">
+          <h3 class="siteFooter-heading">Order</h3>
+          <ul class="siteFooter-list">
+            <li><a href="/#orderForm">Order now</a></li>
+            <li><a href="/menu">Menu</a></li>
+            <li><a href="/delivery">Delivery &amp; hours</a></li>
+            <li><a href="/orders">My orders</a></li>
+          </ul>
+        </div>
+        <div class="siteFooter-col">
+          <h3 class="siteFooter-heading">About</h3>
+          <ul class="siteFooter-list">
+            <li><a href="/about">About</a></li>
+            <li><a href="/faq">FAQ</a></li>
+            <li><a href="/contact">Contact</a></li>
+          </ul>
+        </div>
+        <div class="siteFooter-col">
+          <h3 class="siteFooter-heading">Legal</h3>
+          <ul class="siteFooter-list">
+            <li><a href="/privacy">Privacy</a></li>
+            <li><a href="/terms">Terms</a></li>
+          </ul>
+        </div>
+        <div class="siteFooter-col">
+          <h3 class="siteFooter-heading">Contact</h3>
+          <ul class="siteFooter-list">
+            <li><a href="https://wa.me/2347055076189" target="_blank" rel="noopener">WhatsApp</a></li>
+            <li><a href="tel:+2347055076189">+234 705 507 6189</a></li>
+            <li><span>Ibafo &amp; Mowe, Ogun State</span></li>
+          </ul>
+        </div>
+      </div>
+      <div class="siteFooter-bottom">
+        <p class="siteFooter-demo">Demo build — payments run in Paystack and Stripe test mode; no money is charged. Dishes marked &ldquo;sample&rdquo; are not on the kitchen&rsquo;s current menu.</p>
+        <p class="siteFooter-copy">&copy; 2026 Fatima Spagogo &middot; Built by <a href="TODO_PORTFOLIO_URL" target="_blank" rel="noopener">BraceScripts</a></p>
+      </div>
+    </div>
+  </footer>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.116.0/dist/umd/supabase.min.js" integrity="sha384-JBR+x8blGwjDRO63aHCGiZMD4VNiTR4ZUGA+N6ZKLf3zNt1fK8IBpcgPaMrxqWBp" crossorigin="anonymous"></script>
 <script src="supabase-init.js"></script>
 <script src="main.js"></script>
 <script src="chat-widget.js"></script>
                            
                                                 <script src="auth.js"></script>
+                                                <script src="/nav.js"></script>
                                                 </body>
                         </html>
