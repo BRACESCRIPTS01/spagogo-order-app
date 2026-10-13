@@ -32,7 +32,12 @@ const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_8tDy1gTILSX3CVCNTcyF1g_toSX7sr8
 const MENU = {
     item1: { name: "Spicy Spaghetti + Beef + Egg - ₦1,500", price: 1500 },
     item2: { name: "Spicy Spaghetti + Peppered stir-Fry Chicken(meduim) + Egg - ₦2,000", price: 2000 },
-    item3: { name: "Spicy Spaghetti + Peppered stir-Fry Chicken(Big) + Egg - ₦2,500", price: 2500 }
+    item3: { name: "Spicy Spaghetti + Peppered stir-Fry Chicken(Big) + Egg - ₦2,500", price: 2500 },
+    item4: { name: "Spicy Spaghetti + Fish + Egg - ₦2,000", price: 2000 },
+    item5: { name: "Spicy Spaghetti + Turkey + Egg - ₦3,000", price: 3000 },
+    item6: { name: "Prawn Stir-fry Spaghetti - ₦3,000", price: 3000 },
+    item7: { name: "Jollof Spaghetti + Plantain - ₦1,800", price: 1800 },
+    item8: { name: "Family Pack (serves 4) - ₦7,500", price: 7500 }
 };
 // Delivery fee in naira. Mowe is a ₦500 minimum; any extra distance is settled on WhatsApp.
 const DELIVERY_FEE = { ibafo: 0, Mowe: 500 };

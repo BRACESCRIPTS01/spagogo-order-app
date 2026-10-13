@@ -1,5 +1,5 @@
 function updateTotal() {
-    var prices = { "item1": 1500, "item2": 2000, "item3": 2500 };
+    var prices = { "item1": 1500, "item2": 2000, "item3": 2500, "item4": 2000, "item5": 3000, "item6": 3000, "item7": 1800, "item8": 7500 };
     var fees = { "ibafo": 0, "Mowe": 500 };
     var item = document.querySelector('input[name="menuItem"]:checked').value;
     var quantity = parseInt(document.getElementById("quantity").value, 10) || 1;
