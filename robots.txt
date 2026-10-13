@@ -1,3 +1,4 @@
 User-agent: *
 Allow: /
 Disallow: /.netlify/functions/
+Sitemap: https://spagogofoodapp.netlify.app/sitemap.xml
