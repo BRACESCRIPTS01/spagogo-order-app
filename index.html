@@ -18,6 +18,7 @@
         <link rel="icon" type="image/svg+xml" href="logo.svg">        
         <link rel="stylesheet" href="style.css">
         <link rel="stylesheet" href="/layout.css">
+        <link rel="stylesheet" href="order.css">
         </head>
         <body>
   <a class="skipLink" href="#orderForm">Skip to content</a>
@@ -109,105 +110,187 @@
                 <p id="paymentHint" class="paymentHint"></p>
                 <button type="button" id="paymentCloseBtn" class="linkBtn">Place another order</button>
             </section>
-            <form id="orderForm">
-                <div>
-                    <label for="customerName">Full Name:</label>
-                    <input type="text" id="customerName" name="customerName" placeholder="e.g. John Doe">
-                    </div>
-                    <div>
-                        <label for="customerPhone">Phone Number:</label>
-                        <input type="tel" id="customerPhone" name="customerPhone" placeholder="e.g. 08012345678">
-                        </div>
-                        <div>
-                        <label for="customerEmail">Email (for your payment receipt):</label>
-                        <input type="email" id="customerEmail" name="customerEmail" placeholder="e.g. you@example.com (optional when logged in)" autocomplete="email">
-                        </div>
-                        <div>
-                            <label for="deliveryAddress">Delivery Address:</label>
-                            <input type="text" id="deliveryAddress" name="deliveryAddress" placeholder="e.g. 12 Ajayi street, Ibafo">
+            <form id="orderForm" class="checkout">
+                <div class="checkout-main">
+                    <section class="checkout-step" aria-labelledby="stepDishTitle">
+                        <h2 class="checkout-stepTitle" id="stepDishTitle"><span class="checkout-stepNum">1</span>Choose your dish</h2>
+                        <fieldset class="dishFieldset">
+                            <legend class="srOnly">Menu item</legend>
+                            <div class="dishList">
+                                <label class="dishRow">
+                                    <input type="radio" name="menuItem" value="item1" data-name="Beef + Egg" checked>
+                                    <span class="dishRow-body">
+                                        <img src="menu-beef.webp" alt="" class="dishRow-img" width="56" height="56" loading="lazy">
+                                        <span class="dishRow-text">
+                                            <span class="dishRow-title">Beef + Egg</span>
+                                            <span class="dishRow-desc">Spicy spaghetti with beef and a boiled egg</span>
+                                        </span>
+                                        <span class="dishRow-price">₦1,500</span>
+                                    </span>
+                                </label>
+                                <label class="dishRow">
+                                    <input type="radio" name="menuItem" value="item2" data-name="Chicken (Medium) + Egg">
+                                    <span class="dishRow-body">
+                                        <img src="menu-chicken-med.webp" alt="" class="dishRow-img" width="56" height="56" loading="lazy">
+                                        <span class="dishRow-text">
+                                            <span class="dishRow-title">Chicken (Medium) + Egg</span>
+                                            <span class="dishRow-desc">Spicy spaghetti with a medium chicken piece and egg</span>
+                                        </span>
+                                        <span class="dishRow-price">₦2,000</span>
+                                    </span>
+                                </label>
+                                <label class="dishRow">
+                                    <input type="radio" name="menuItem" value="item3" data-name="Chicken (Big) + Egg">
+                                    <span class="dishRow-body">
+                                        <img src="menu-chicken-big.webp" alt="" class="dishRow-img" width="56" height="56" loading="lazy">
+                                        <span class="dishRow-text">
+                                            <span class="dishRow-title">Chicken (Big) + Egg</span>
+                                            <span class="dishRow-desc">Spicy spaghetti with a large chicken piece and egg</span>
+                                        </span>
+                                        <span class="dishRow-price">₦2,500</span>
+                                    </span>
+                                </label>
+                                <label class="dishRow">
+                                    <input type="radio" name="menuItem" value="item4" data-name="Fish + Egg">
+                                    <span class="dishRow-body">
+                                        <img src="menu-fish.webp" alt="" class="dishRow-img" width="56" height="56" loading="lazy">
+                                        <span class="dishRow-text">
+                                            <span class="dishRow-title">Fish + Egg <span class="dishRow-tag">Sample</span></span>
+                                            <span class="dishRow-desc">Spicy spaghetti with fried mackerel and egg</span>
+                                        </span>
+                                        <span class="dishRow-price">₦2,000</span>
+                                    </span>
+                                </label>
+                                <label class="dishRow">
+                                    <input type="radio" name="menuItem" value="item5" data-name="Turkey + Egg">
+                                    <span class="dishRow-body">
+                                        <img src="menu-turkey.webp" alt="" class="dishRow-img" width="56" height="56" loading="lazy">
+                                        <span class="dishRow-text">
+                                            <span class="dishRow-title">Turkey + Egg <span class="dishRow-tag">Sample</span></span>
+                                            <span class="dishRow-desc">Spicy spaghetti with a turkey wing and egg</span>
+                                        </span>
+                                        <span class="dishRow-price">₦3,000</span>
+                                    </span>
+                                </label>
+                                <label class="dishRow">
+                                    <input type="radio" name="menuItem" value="item6" data-name="Prawn Stir-fry">
+                                    <span class="dishRow-body">
+                                        <img src="menu-prawn.webp" alt="" class="dishRow-img" width="56" height="56" loading="lazy">
+                                        <span class="dishRow-text">
+                                            <span class="dishRow-title">Prawn Stir-fry <span class="dishRow-tag">Sample</span></span>
+                                            <span class="dishRow-desc">Stir-fried spaghetti with prawns and vegetables</span>
+                                        </span>
+                                        <span class="dishRow-price">₦3,000</span>
+                                    </span>
+                                </label>
+                                <label class="dishRow">
+                                    <input type="radio" name="menuItem" value="item7" data-name="Jollof Spaghetti + Plantain">
+                                    <span class="dishRow-body">
+                                        <img src="menu-jollof-plantain.webp" alt="" class="dishRow-img" width="56" height="56" loading="lazy">
+                                        <span class="dishRow-text">
+                                            <span class="dishRow-title">Jollof Spaghetti + Plantain <span class="dishRow-tag">Sample</span></span>
+                                            <span class="dishRow-desc">Party-style jollof spaghetti with fried plantain</span>
+                                        </span>
+                                        <span class="dishRow-price">₦1,800</span>
+                                    </span>
+                                </label>
+                                <label class="dishRow">
+                                    <input type="radio" name="menuItem" value="item8" data-name="Family Pack">
+                                    <span class="dishRow-body">
+                                        <img src="menu-family-pack.webp" alt="" class="dishRow-img" width="56" height="56" loading="lazy">
+                                        <span class="dishRow-text">
+                                            <span class="dishRow-title">Family Pack <span class="dishRow-tag">Sample</span></span>
+                                            <span class="dishRow-desc">Beef and chicken spaghetti for four, with eggs</span>
+                                        </span>
+                                        <span class="dishRow-price">₦7,500</span>
+                                    </span>
+                                </label>
                             </div>
-                            <div>
-                                <label for="deliveryZone">Delivery Zone:</label>
+                        </fieldset>
+                        <p class="dishNote">Dishes marked "Sample" show how a fuller menu looks on this demo; they are not on the kitchen's current menu.</p>
+                        <div class="qtyField">
+                            <label for="quantity">Quantity</label>
+                            <div class="qtyStepper">
+                                <button type="button" class="qtyBtn" data-step="-1" aria-label="Decrease quantity">−</button>
+                                <input type="number" id="quantity" name="quantity" min="1" max="20" value="1" inputmode="numeric">
+                                <button type="button" class="qtyBtn" data-step="1" aria-label="Increase quantity">+</button>
+                            </div>
+                        </div>
+                    </section>
+                    <section class="checkout-step" aria-labelledby="stepDeliveryTitle">
+                        <h2 class="checkout-stepTitle" id="stepDeliveryTitle"><span class="checkout-stepNum">2</span>Delivery details</h2>
+                        <div class="fieldGrid">
+                            <div class="field">
+                                <label for="customerName">Full name</label>
+                                <input type="text" id="customerName" name="customerName" placeholder="e.g. John Doe" autocomplete="name">
+                            </div>
+                            <div class="field">
+                                <label for="customerPhone">Phone number</label>
+                                <input type="tel" id="customerPhone" name="customerPhone" placeholder="e.g. 08012345678" autocomplete="tel" inputmode="numeric">
+                            </div>
+                            <div class="field field--full">
+                                <label for="deliveryAddress">Delivery address</label>
+                                <input type="text" id="deliveryAddress" name="deliveryAddress" placeholder="e.g. 12 Ajayi street, Ibafo" autocomplete="street-address">
+                            </div>
+                            <div class="field">
+                                <label for="deliveryZone">Delivery zone</label>
                                 <select id="deliveryZone" name="deliveryZone">
                                     <option value="ibafo">Ibafo</option>
                                     <option value="Mowe">Mowe</option>
-                                    </select>
-                                    <small class="fieldNote">Ibafo: free delivery. Mowe: from ₦500, extra distance settled on WhatsApp.</small>
-                                    </div>
-                                        <fieldset class="menu-selection">
-                                            <legend>Select Menu Item:</legend>
-                                            <div class="menu-cards">
-                                                <label class="menu-card">
-                                                    <input type="radio" name="menuItem" value="item1" checked>
-                                                    <div class="card-content">
-                                                        <img src="menu-beef.webp" alt="Spicy Spaghetti with Beef and Egg" class="card-img" width="100" height="100" loading="lazy">
-                                                        <div class="card-text">
-                                                            <span class="card-title">Beef + Egg</span>
-                                                            <span class="card-desc">Spicy Spaghetti</span>
-                                                            <span class="card-price">₦1,500</span>
-                                                        </div>
-                                                    </div>
-                                                </label>
-                                                <label class="menu-card">
-                                                    <input type="radio" name="menuItem" value="item2">
-                                                    <div class="card-content">
-                                                        <img src="menu-chicken-med.webp" alt="Spicy Spaghetti with Medium Chicken and Egg" class="card-img" width="100" height="100" loading="lazy">
-                                                        <div class="card-text">
-                                                            <span class="card-title">Chicken (Medium) + Egg</span>
-                                                            <span class="card-desc">Spicy Spaghetti</span>
-                                                            <span class="card-price">₦2,000</span>
-                                                        </div>
-                                                    </div>
-                                                </label>
-                                                <label class="menu-card">
-                                                    <input type="radio" name="menuItem" value="item3">
-                                                    <div class="card-content">
-                                                        <img src="menu-chicken-big.webp" alt="Spicy Spaghetti with Big Chicken and Egg" class="card-img" width="100" height="100" loading="lazy">
-                                                        <div class="card-text">
-                                                            <span class="card-title">Chicken (Big) + Egg</span>
-                                                            <span class="card-desc">Spicy Spaghetti</span>
-                                                            <span class="card-price">₦2,500</span>
-                                                        </div>
-                                                    </div>
-                                                </label>
-                                            </div>
-                                        </fieldset>
-                                            <div>
-                                                <label for="quantity">Quantity:</label>
-                                                <input type="number" id="quantity" name="quantity" min="1" value="1">
-                                            </div>
-                                        <fieldset class="menu-selection">
-                                            <legend>Pay with:</legend>
-                                            <div class="menu-cards">
-                                                <label class="menu-card">
-                                                    <input type="radio" name="payMethod" value="paystack" checked>
-                                                    <div class="card-content">
-                                                        <div class="card-text">
-                                                            <span class="card-title">Paystack</span>
-                                                            <span class="card-desc">Nigerian cards, bank transfer, USSD</span>
-                                                        </div>
-                                                    </div>
-                                                </label>
-                                                <label class="menu-card">
-                                                    <input type="radio" name="payMethod" value="stripe">
-                                                    <div class="card-content">
-                                                        <div class="card-text">
-                                                            <span class="card-title">International card (Stripe)</span>
-                                                            <span class="card-desc">Test mode, no real charge. Use card 4242 4242 4242 4242, any future date, any CVC.</span>
-                                                        </div>
-                                                    </div>
-                                                </label>
-                                            </div>
-                                        </fieldset>                                            
-                                            <div class="order-summary-sticky">
-                                                <div id="formError" class="formError" style="display: none; color: #B3261E; margin-bottom: 12px; font-weight: 500;"></div>
-                                                <div class="total-row">
-                                                    <span>Total:</span>
-                                                    <strong id="displayTotal">₦1,500</strong>
-                                                </div>
-                                                <button type="button" id="submitOrder">Place Order</button>
-                                            </div>
-                        </form>
+                                </select>
+                                <small class="fieldNote">Ibafo: free delivery. Mowe: from ₦500, extra distance settled on WhatsApp.</small>
+                            </div>
+                            <div class="field">
+                                <label for="customerEmail">Email <span class="fieldOptional">(optional, for your receipt)</span></label>
+                                <input type="email" id="customerEmail" name="customerEmail" placeholder="e.g. you@example.com" autocomplete="email">
+                            </div>
+                        </div>
+                    </section>
+                    <section class="checkout-step" aria-labelledby="stepPayTitle">
+                        <h2 class="checkout-stepTitle" id="stepPayTitle"><span class="checkout-stepNum">3</span>Payment</h2>
+                        <fieldset class="payFieldset">
+                            <legend class="srOnly">Payment method</legend>
+                            <div class="payList">
+                                <label class="payRow">
+                                    <input type="radio" name="payMethod" value="paystack" checked>
+                                    <span class="payRow-body">
+                                        <span class="payRow-text">
+                                            <span class="payRow-title">Paystack</span>
+                                            <span class="payRow-desc">Nigerian cards, bank transfer, USSD</span>
+                                        </span>
+                                    </span>
+                                </label>
+                                <label class="payRow">
+                                    <input type="radio" name="payMethod" value="stripe">
+                                    <span class="payRow-body">
+                                        <span class="payRow-text">
+                                            <span class="payRow-title">International card (Stripe)<span class="dishRow-tag">Test mode</span></span>
+                                            <span class="payRow-desc">No real charge. Use card 4242 4242 4242 4242, any future date, any CVC.</span>
+                                        </span>
+                                    </span>
+                                </label>
+                            </div>
+                        </fieldset>
+                    </section>
+                </div>
+                <aside class="checkout-summary" aria-label="Order summary">
+                    <div class="order-summary-sticky">
+                        <h2 class="summaryTitle">Your order</h2>
+                        <div id="formError" class="formError"></div>
+                        <dl class="summaryRows">
+                            <div class="summaryRow"><dt>Dish</dt><dd id="summaryDish">Beef + Egg × 1</dd></div>
+                            <div class="summaryRow summaryRow--food"><dt>Food</dt><dd id="summaryFood">₦1,500</dd></div>
+                            <div class="summaryRow"><dt>Delivery</dt><dd id="summaryFee">Free</dd></div>
+                        </dl>
+                        <div class="total-row">
+                            <span>Total</span>
+                            <strong id="displayTotal">₦1,500</strong>
+                        </div>
+                        <button type="button" id="submitOrder">Place Order</button>
+                        <p class="summaryNote">Pay on the site first — the kitchen only receives paid orders. Mon–Fri, 6am–4pm.</p>
+                    </div>
+                </aside>
+            </form>
                         <div id="chatWidget">
     <button type="button" id="chatToggleBtn" aria-label="Chat with us">💬 Ask a question</button>
     <div id="chatWindow" class="hidden">

@@ -1,0 +1,492 @@
+.srOnly {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+#orderForm.checkout {
+    --formPad: var(--space-4);
+    max-width: 640px;
+    margin: 0 auto;
+    padding: var(--formPad);
+    display: block;
+}
+.checkout-main {
+    min-width: 0;
+}
+.checkout-step {
+    margin: 0 0 var(--space-5);
+}
+.checkout-step:last-child {
+    margin-bottom: 0;
+}
+.checkout-stepTitle {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 0 var(--space-3);
+    font-family: var(--font-heading);
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+.checkout-stepNum {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background-color: var(--primary);
+    color: #ffffff;
+    font-family: var(--font-body);
+    font-size: 14px;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.dishFieldset,
+.payFieldset {
+    border: 0;
+    padding: 0;
+    margin: 0;
+    min-width: 0;
+}
+.dishList {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+}
+.dishRow,
+.payRow {
+    position: relative;
+    display: flex;
+    cursor: pointer;
+    margin: 0;
+}
+.dishRow input[type="radio"],
+.payRow input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    width: 1px;
+    height: 1px;
+    margin: 0;
+    pointer-events: none;
+}
+.dishRow-body {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border: 2px solid var(--border);
+    border-radius: 16px;
+    background-color: var(--surface);
+    transition: border-color 0.15s ease, background-color 0.15s ease, transform 0.15s ease;
+}
+.dishRow-img {
+    width: 56px;
+    height: 56px;
+    border-radius: 12px;
+    object-fit: cover;
+    flex-shrink: 0;
+}
+.dishRow-text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    flex: 1 1 auto;
+}
+.dishRow-title {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px 6px;
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 1.25;
+    color: var(--text-primary);
+}
+.dishRow-desc {
+    margin-top: 2px;
+    font-size: 13px;
+    line-height: 1.35;
+    color: var(--text-secondary);
+}
+.dishRow-price {
+    margin-left: auto;
+    font-weight: 700;
+    font-size: 15px;
+    color: var(--primary);
+    white-space: nowrap;
+}
+.dishRow-tag {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 999px;
+    border: 1px solid #f3d18a;
+    background-color: #fff1d6;
+    color: #8a5a00;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    line-height: 1.3;
+    text-transform: uppercase;
+}
+.dishRow input[type="radio"]:checked + .dishRow-body {
+    border-color: var(--primary);
+    background-color: rgba(179, 38, 30, 0.05);
+}
+.dishRow input[type="radio"]:focus-visible + .dishRow-body,
+.payRow input[type="radio"]:focus-visible + .payRow-body {
+    outline: 2px solid var(--primary);
+    outline-offset: 2px;
+}
+.dishRow:active .dishRow-body {
+    transform: scale(0.985);
+}
+.dishNote {
+    margin: 10px 0 0;
+    font-size: 12px;
+    line-height: 1.4;
+    color: var(--text-secondary);
+}
+
+.qtyField {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-top: var(--space-3);
+    padding-top: var(--space-3);
+    border-top: 1px solid var(--border);
+}
+.qtyField label {
+    margin: 0;
+}
+.qtyStepper {
+    display: inline-flex;
+    align-items: center;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    background-color: var(--surface);
+}
+.qtyBtn {
+    width: 44px;
+    height: 44px;
+    margin: 0;
+    padding: 0;
+    border-radius: 0;
+    background-color: #f6f1ea;
+    color: var(--text-primary);
+    font-size: 22px;
+    font-weight: 600;
+    line-height: 1;
+}
+.qtyBtn:hover {
+    background-color: #ede4d8;
+    transform: none;
+}
+.qtyBtn:active {
+    background-color: #e3d7c6;
+    transform: none;
+}
+#orderForm #quantity {
+    width: 64px;
+    margin: 0;
+    padding: 10px 4px;
+    border: 0;
+    border-radius: 0;
+    text-align: center;
+    font-weight: 600;
+    -moz-appearance: textfield;
+    appearance: textfield;
+}
+#orderForm #quantity::-webkit-outer-spin-button,
+#orderForm #quantity::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+#orderForm #quantity:focus {
+    box-shadow: none;
+    outline: 2px solid var(--primary);
+    outline-offset: -2px;
+}
+
+#orderForm select {
+    background-color: var(--surface);
+}
+.fieldGrid {
+    display: grid;
+    grid-template-columns: 1fr;
+    column-gap: 16px;
+}
+.fieldGrid .field {
+    margin-top: var(--space-3);
+    min-width: 0;
+}
+.fieldGrid .field:first-child {
+    margin-top: 0;
+}
+.fieldGrid .field label {
+    margin-top: 0;
+}
+.fieldOptional {
+    font-weight: 400;
+    color: var(--text-secondary);
+}
+.field--full {
+    grid-column: 1 / -1;
+}
+
+.payList {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 10px;
+}
+.payRow-body {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 12px 14px;
+    border: 2px solid var(--border);
+    border-radius: 16px;
+    background-color: var(--surface);
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+}
+.payRow-body::before {
+    content: "";
+    flex-shrink: 0;
+    box-sizing: border-box;
+    width: 18px;
+    height: 18px;
+    margin-top: 1px;
+    border: 2px solid #b9b0ba;
+    border-radius: 50%;
+    background-color: var(--surface);
+    transition: border-color 0.15s ease, border-width 0.15s ease;
+}
+.payRow input[type="radio"]:checked + .payRow-body {
+    border-color: var(--primary);
+    background-color: rgba(179, 38, 30, 0.05);
+}
+.payRow input[type="radio"]:checked + .payRow-body::before {
+    border-color: var(--primary);
+    border-width: 6px;
+}
+.payRow-text {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+}
+.payRow-title {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 4px 8px;
+    font-weight: 600;
+    font-size: 15px;
+    line-height: 1.25;
+    color: var(--text-primary);
+}
+.payRow-desc {
+    margin-top: 2px;
+    font-size: 13px;
+    line-height: 1.35;
+    color: var(--text-secondary);
+}
+
+.checkout-summary {
+    position: sticky;
+    bottom: 0;
+    z-index: 10;
+    margin: var(--space-4) calc(-1 * var(--formPad)) calc(-1 * var(--formPad));
+}
+.order-summary-sticky {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    column-gap: 16px;
+    row-gap: 4px;
+    align-items: center;
+    padding: 10px var(--formPad) 12px;
+    border-top: 1px solid var(--border);
+    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+    background-color: var(--surface);
+    box-shadow: 0 -8px 24px rgba(0, 0, 0, 0.08);
+}
+.summaryTitle {
+    display: none;
+    margin: 0;
+    font-family: var(--font-heading);
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text-primary);
+}
+.formError {
+    grid-column: 1 / -1;
+    display: none;
+    margin: 0 0 4px;
+    color: #b3261e;
+    font-size: 14px;
+    font-weight: 500;
+}
+.summaryRows {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px 14px;
+    margin: 0;
+    font-size: 12px;
+    color: var(--text-secondary);
+}
+.summaryRow {
+    display: flex;
+    gap: 4px;
+}
+.summaryRow--food {
+    display: none;
+}
+.summaryRow dt {
+    font-weight: 500;
+}
+.summaryRow dt::after {
+    content: ":";
+}
+.summaryRow dd {
+    margin: 0;
+    color: var(--text-primary);
+}
+.total-row {
+    grid-column: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-width: 0;
+}
+.total-row span {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-secondary);
+}
+.total-row strong {
+    font-size: 22px;
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--primary);
+}
+#orderForm #submitOrder {
+    grid-column: 2;
+    width: auto;
+    min-width: 150px;
+    margin: 0;
+    padding: 14px 22px;
+}
+.summaryNote {
+    display: none;
+    margin: 0;
+    font-size: 12px;
+    line-height: 1.4;
+    color: var(--text-secondary);
+}
+
+@media (max-width: 1023px) {
+    body:not(.page) #chatWidget {
+        bottom: calc(16px + 100px);
+    }
+}
+
+@media (min-width: 700px) {
+    #orderForm.checkout {
+        --formPad: var(--space-5);
+        max-width: 760px;
+    }
+    .dishList {
+        grid-template-columns: 1fr 1fr;
+    }
+    .fieldGrid {
+        grid-template-columns: 1fr 1fr;
+    }
+    .fieldGrid .field:nth-child(2) {
+        margin-top: 0;
+    }
+    .payList {
+        grid-template-columns: 1fr 1fr;
+    }
+}
+
+@media (min-width: 1024px) {
+    #orderForm.checkout {
+        max-width: 1040px;
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) 320px;
+        column-gap: var(--space-5);
+        align-items: start;
+    }
+    .checkout-summary {
+        bottom: auto;
+        top: 88px;
+        margin: 0;
+    }
+    .order-summary-sticky {
+        display: block;
+        padding: var(--space-4);
+        border: 1px solid var(--border);
+        border-radius: var(--radius-lg);
+        background-color: #fffcf7;
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+    }
+    .summaryTitle {
+        display: block;
+        margin-bottom: 12px;
+    }
+    .formError {
+        margin-bottom: 10px;
+    }
+    .summaryRows {
+        display: block;
+        font-size: 14px;
+    }
+    .summaryRow,
+    .summaryRow--food {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+        padding: 7px 0;
+        border-bottom: 1px dashed var(--border);
+    }
+    .summaryRow dt::after {
+        content: "";
+    }
+    .summaryRow dd {
+        text-align: right;
+    }
+    .total-row {
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: baseline;
+        padding-top: 12px;
+    }
+    .total-row span {
+        font-size: 15px;
+    }
+    .total-row strong {
+        font-size: 26px;
+    }
+    #orderForm #submitOrder {
+        width: 100%;
+        margin-top: 14px;
+    }
+    .summaryNote {
+        display: block;
+        margin-top: 10px;
+    }
+}

@@ -1,21 +1,30 @@
 function updateTotal() {
     var prices = { "item1": 1500, "item2": 2000, "item3": 2500, "item4": 2000, "item5": 3000, "item6": 3000, "item7": 1800, "item8": 7500 };
     var fees = { "ibafo": 0, "Mowe": 500 };
-    var item = document.querySelector('input[name="menuItem"]:checked').value;
+    var radio = document.querySelector('input[name="menuItem"]:checked');
     var quantity = parseInt(document.getElementById("quantity").value, 10) || 1;
     var zone = document.getElementById("deliveryZone").value;
-    var food = prices[item] * quantity;
+    var food = prices[radio.value] * quantity;
     var fee = fees[zone] || 0;
     var total = food + fee;
-    var text = "₦" + food.toLocaleString("en-NG");
-    if (fee > 0) {
-        text = "₦" + food.toLocaleString("en-NG") + " + ₦" + fee.toLocaleString("en-NG") + " delivery = ₦" + total.toLocaleString("en-NG");
-    }
-    document.getElementById("displayTotal").textContent = text;
+    document.getElementById("summaryDish").textContent = radio.dataset.name + " \u00d7 " + quantity;
+    document.getElementById("summaryFood").textContent = "\u20a6" + food.toLocaleString("en-NG");
+    document.getElementById("summaryFee").textContent = fee > 0 ? "\u20a6" + fee.toLocaleString("en-NG") : "Free";
+    document.getElementById("displayTotal").textContent = "\u20a6" + total.toLocaleString("en-NG");
 }
 document.querySelectorAll('input[name="menuItem"]').forEach(function (radio) { radio.addEventListener("change", updateTotal); });
 document.getElementById("quantity").addEventListener("input", updateTotal);
 document.getElementById("deliveryZone").addEventListener("change", updateTotal);
+document.querySelectorAll(".qtyBtn").forEach(function (btn) {
+    btn.addEventListener("click", function () {
+        var input = document.getElementById("quantity");
+        var next = (parseInt(input.value, 10) || 1) + Number(btn.dataset.step);
+        if (next < 1) next = 1;
+        if (next > 20) next = 20;
+        input.value = next;
+        input.dispatchEvent(new Event("input", { bubbles: true }));
+    });
+});
 updateTotal();
 
 document.getElementById("submitOrder").addEventListener("click", async function() {
