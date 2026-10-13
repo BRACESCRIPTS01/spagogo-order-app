@@ -399,16 +399,6 @@ body:not(.page) .siteFooter {
     margin: var(--space-4) 0;
 }
 
-.prose .todoBox {
-    background: rgba(255, 180, 0, 0.08);
-    border: 1px dashed rgba(255, 180, 0, 0.4);
-    border-radius: var(--radius-md);
-    padding: var(--space-3) var(--space-4);
-    margin: var(--space-4) 0;
-    color: #ffd166;
-    font-size: 14px;
-}
-
 .decorativeImage {
     width: 100%;
     max-width: 680px;
