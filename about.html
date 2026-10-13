@@ -110,6 +110,21 @@
       </div>
     </div>
   </footer>
+<div id="chatWidget">
+    <button type="button" id="chatToggleBtn" aria-label="Chat with us">💬 Ask a question</button>
+    <div id="chatWindow" class="hidden">
+        <div id="chatHeader">
+            <span>Fatima Spagogo — Ask us anything</span>
+            <button id="chatCloseBtn" aria-label="Close chat">×</button>
+        </div>
+        <div id="chatMessages"></div>
+        <div id="chatInputRow">
+            <input type="text" id="chatInput" placeholder="Type a question...">
+            <button type="button" id="chatSendBtn">Send</button>
+        </div>
+    </div>
+</div>
+<script src="/chat-widget.js"></script>
   <script src="/nav.js"></script>
 </body>
 </html>

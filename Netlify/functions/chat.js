@@ -12,14 +12,20 @@
 const SYSTEM_CONTEXT = `You are the FAQ assistant for Fatima Spagogo, a local food delivery service serving Ibafo and Mowe in Ogun State, Nigeria.
  
 FACTS YOU MUST STICK TO — do not invent anything beyond this list:
-- Menu:
-  • Spicy Spaghetti + Beef + Egg — ₦1,500
-  • Spicy Spaghetti + Peppered Stir-Fry Chicken (Medium) + Egg — ₦2,000
-  • Spicy Spaghetti + Peppered Stir-Fry Chicken (Big) + Egg — ₦2,500
+- Menu (the code in front of each dish is its order-form code):
+  • item1: Spicy Spaghetti + Beef + Egg — ₦1,500
+  • item2: Spicy Spaghetti + Peppered Stir-Fry Chicken (Medium) + Egg — ₦2,000
+  • item3: Spicy Spaghetti + Peppered Stir-Fry Chicken (Big) + Egg — ₦2,500
+  • item4: Spicy Spaghetti + Fish + Egg — ₦2,000 (sample dish)
+  • item5: Spicy Spaghetti + Turkey + Egg — ₦3,000 (sample dish)
+  • item6: Prawn Stir-fry Spaghetti — ₦3,000 (sample dish)
+  • item7: Jollof Spaghetti + Plantain — ₦1,800 (sample dish)
+  • item8: Family Pack (serves 4) — ₦7,500 (sample dish)
+- Dishes marked "sample dish" are demo items added to show a fuller menu on this demo site. They can be ordered here like any other dish, but if someone asks, say plainly that they are sample dishes.
 - Delivery zones: Ibafo and Mowe only. Delivery within the Ibafo axis is free. Delivery to Mowe starts at ₦500 (the ₦500 minimum is added at checkout; any extra for longer distances is agreed on WhatsApp after payment). No delivery anywhere else.
 - Orders and delivery run Monday–Friday, 6am–4pm only. Orders outside this window are not accepted.
-- The site has a quick order form above this chat. When someone wants to order, their selection gets pre-filled into that form. They press "Place Order" and pay securely on the site through Paystack (card, bank transfer or USSD). After payment they get a confirmation and a button that sends the paid order to the kitchen on WhatsApp.
-- Payment is required upfront, on the site. An order is only confirmed once Paystack confirms the payment. The site does not take cash on delivery.
+- The site has a quick order form above this chat. When someone wants to order, their selection gets pre-filled into that form. They press "Place Order" and pay securely on the site through Paystack (card, bank transfer or USSD) or Stripe (card). After payment they get a confirmation and a button that sends the paid order to the kitchen on WhatsApp.
+- Payment is required upfront, on the site. An order is only confirmed once Paystack or Stripe confirms the payment. The site does not take cash on delivery.
 - If a delivery does not happen, a refund is issued along with the reason.
  
 RULES:
@@ -30,7 +36,7 @@ RULES:
 
 ORDER INTENT:
 - Set orderIntent to true ONLY when the person is clearly trying to place an order right now (e.g. "I want the beef one", "let's order 2 of the big chicken", "can I get one spaghetti and egg"). Questions about the menu, prices, or hours are NOT order intent.
-- If orderIntent is true, map what they asked for to item1 (Beef), item2 (Medium Chicken), or item3 (Big Chicken). If it's ambiguous which item, use "unknown" and ask them to clarify in the reply text instead of guessing.
+- If orderIntent is true, map what they asked for to the order-form code from the menu list: item1 (Beef), item2 (Medium Chicken), item3 (Big Chicken), item4 (Fish), item5 (Turkey), item6 (Prawn), item7 (Jollof + Plantain), item8 (Family Pack). If it's ambiguous which item, use "unknown" and ask them to clarify in the reply text instead of guessing.
 - If orderIntent is true and no quantity was stated, default quantity to 1.
 - If orderIntent is false, item must be "unknown" and quantity must be 1.
 - When orderIntent is true and item is known, mention in the reply that you've filled in the order form for them and they just need to check the details, press Place Order and pay.`;
@@ -98,7 +104,7 @@ exports.handler = async (event) => {
       properties: {
         reply: { type: "string", description: "2-3 sentence chat reply shown to the user." },
         orderIntent: { type: "boolean", description: "True only if the user is trying to place an order right now." },
-        item: { type: "string", enum: ["item1", "item2", "item3", "unknown"], description: "item1=Beef, item2=Medium Chicken, item3=Big Chicken. unknown if orderIntent is false or unclear." },
+        item: { type: "string", enum: ["item1", "item2", "item3", "item4", "item5", "item6", "item7", "item8", "unknown"], description: "item1=Beef, item2=Medium Chicken, item3=Big Chicken, item4=Fish, item5=Turkey, item6=Prawn, item7=Jollof + Plantain, item8=Family Pack. unknown if orderIntent is false or unclear." },
         quantity: { type: "integer", description: "Quantity requested. 1 if unclear or orderIntent is false." }
       },
       required: ["reply", "orderIntent", "item", "quantity"]
@@ -134,7 +140,7 @@ const rawText = parts
         var parsed = JSON.parse(rawText);
         reply = parsed.reply || reply;
         orderIntent = parsed.orderIntent === true;
-        item = ["item1", "item2", "item3"].indexOf(parsed.item) !== -1 ? parsed.item : "unknown";
+        item = ["item1", "item2", "item3", "item4", "item5", "item6", "item7", "item8"].indexOf(parsed.item) !== -1 ? parsed.item : "unknown";
         quantity = Number.isInteger(parsed.quantity) && parsed.quantity > 0 ? parsed.quantity : 1;
       } catch (parseErr) {
         console.error("Failed to parse structured Gemini response:", parseErr, rawText);
