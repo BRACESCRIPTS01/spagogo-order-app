@@ -80,7 +80,7 @@ exports.handler = async (event) => {
   }
  
   // Verify this model ID is current before you deploy — check Google AI Studio.
-     const MODEL = "gemini-3.5-flash";
+  const MODEL = "gemini-3.5-flash-lite";
  
   try {
     const response = await fetch(
@@ -117,7 +117,9 @@ exports.handler = async (event) => {
     if (!response.ok) {
       const errText = await response.text();
       console.error("Gemini API error:", response.status, errText);
-      // 429 here means you've hit the free-tier rate limit
+      if (response.status === 429) {
+        return { statusCode: 200, headers, body: JSON.stringify({ reply: "The assistant has reached its free daily limit. Please message us on WhatsApp instead.", orderIntent: false, item: "unknown", quantity: 1 }) };
+      }
       return { statusCode: 502, headers, body: JSON.stringify({ error: "Upstream API error" }) };
     }
  
