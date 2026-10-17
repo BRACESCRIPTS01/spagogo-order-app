@@ -24,15 +24,14 @@ export default async (req) => {
     }
 
     const found = await supabaseRest(supabaseKey, "GET",
-        "/rest/v1/orders?select=id,status,amount,item,quantity,zone&stripe_session_id=eq." + encodeURIComponent(sessionId));
+        "/rest/v1/orders?select=id,status,amount,item,quantity,zone,created_at,scheduled_for&stripe_session_id=eq." + encodeURIComponent(sessionId));
     if (!found.ok || !Array.isArray(found.data)) {
         console.error("verify-stripe: order lookup failed for", sessionId, found.status, found.text);
         return json(500, { error: "Lookup failed" });
     }
     const order = found.data[0];
     if (!order) return json(404, { error: "No order with that session" });
-    const pub = { id: order.id, amount: order.amount, item: order.item, quantity: order.quantity, zone: order.zone };
-
+    const pub = { id: order.id, amount: order.amount, item: order.item, quantity: order.quantity, zone: order.zone, created_at: order.created_at, scheduled_for: order.scheduled_for };
     if (order.status === "approved") return json(200, { status: "paid", order: pub });
     if (order.status === "error") return json(200, { status: "error", order: pub });
 
