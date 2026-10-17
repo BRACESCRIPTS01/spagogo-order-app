@@ -3,7 +3,7 @@
 // Creates an order AND starts a Paystack payment for it - all on the server,
 // so the browser never decides the price.
 //
-//   browser  --POST /.netlify/functions/pay-->  this function
+//   browser  --POST /api/pay-->  this function
 //     1. validates the order details
 //     2. works out the total in kobo from the fixed menu + delivery fee
 //     3. inserts the order in Supabase (status 'pending') with that amount
@@ -44,10 +44,15 @@ const DELIVERY_FEE = { ibafo: 0, Mowe: 500 };
 const MAX_QUANTITY = 20;
 const OPEN_HOUR = 6;
 const CLOSE_HOUR = 16;
+const ALLOWED_ORIGINS = ["https://spagogofoodapp.netlify.app", "https://dev--spagogofoodapp.netlify.app"];
 
 export default async (req) => {
     if (req.method !== "POST") {
         return json(405, { error: "Method not allowed" });
+    }
+    const requestOrigin = req.headers.get("origin");
+    if (requestOrigin && !ALLOWED_ORIGINS.includes(requestOrigin)) {
+        return json(403, { error: "Forbidden" });
     }
     const paystackKey = process.env.PAYSTACK_SECRET_KEY;
     const supabaseKey = process.env.SUPABASE_SECRET_KEY;
@@ -241,3 +246,12 @@ async function supabaseRest(secretKey, method, path, body, prefer) {
     try { data = text ? JSON.parse(text) : null; } catch { /* keep raw text for the log */ }
     return { ok: res.ok, status: res.status, data: data, text: text };
 }
+
+export const config = {
+    path: "/api/pay",
+    rateLimit: {
+        windowLimit: 5,
+        windowSize: 60,
+        aggregateBy: ["ip", "domain"]
+    }
+};

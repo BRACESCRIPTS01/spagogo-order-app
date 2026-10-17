@@ -21,10 +21,15 @@ const CURRENCY = "ngn";
 const SESSION_MINUTES = 35;
 const OPEN_HOUR = 6;
 const CLOSE_HOUR = 16;
+const ALLOWED_ORIGINS = ["https://spagogofoodapp.netlify.app", "https://dev--spagogofoodapp.netlify.app"];
 
 export default async (req) => {
     if (req.method !== "POST") {
         return json(405, { error: "Method not allowed" });
+    }
+    const requestOrigin = req.headers.get("origin");
+    if (requestOrigin && !ALLOWED_ORIGINS.includes(requestOrigin)) {
+        return json(403, { error: "Forbidden" });
     }
     const stripeKey = process.env.STRIPE_SECRET_KEY;
     const supabaseKey = process.env.SUPABASE_SECRET_KEY;

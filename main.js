@@ -113,7 +113,7 @@ document.getElementById("submitOrder").addEventListener("click", async function(
     try {
         // The server prices the order (menu + delivery fee), saves it as
         // 'pending' and asks the chosen provider for a checkout link.
-        var endpoint = provider === "stripe" ? "/.netlify/functions/stripe-checkout" : "/.netlify/functions/pay";
+        var endpoint = provider === "stripe" ? "/.netlify/functions/stripe-checkout" : "/api/pay";
         var res = await fetch(endpoint, {
             method: "POST",
             headers: headers,
@@ -122,6 +122,7 @@ document.getElementById("submitOrder").addEventListener("click", async function(
                 zone: zone, item: item, quantity: quantity
             })
         });
+        if (res.status === 429) throw new Error("Too many attempts from your connection; please wait a minute.");
         result = await res.json();
         if (!res.ok) throw new Error(result.error || "HTTP " + res.status);
     } catch (err) {
