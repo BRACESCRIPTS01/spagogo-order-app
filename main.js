@@ -27,6 +27,41 @@ document.querySelectorAll(".qtyBtn").forEach(function (btn) {
 });
 updateTotal();
 
+function scheduleFor(now) {
+    var lagos = new Date(now.getTime() + 60 * 60 * 1000);
+    var year = lagos.getUTCFullYear();
+    var month = lagos.getUTCMonth();
+    var day = lagos.getUTCDate();
+    var weekday = lagos.getUTCDay() >= 1 && lagos.getUTCDay() <= 5;
+    var hour = lagos.getUTCHours();
+    if (weekday && hour >= 6 && hour < 16) return null;
+    if (!weekday || hour >= 16) {
+        do { day += 1; } while ([0, 6].indexOf(new Date(Date.UTC(year, month, day)).getUTCDay()) !== -1);
+    }
+    return new Date(Date.UTC(year, month, day, 6, 0, 0) - 60 * 60 * 1000);
+}
+function formatSchedule(date) {
+    return date.toLocaleString("en-NG", { timeZone: "Africa/Lagos", weekday: "short", day: "numeric", month: "short", hour: "numeric", minute: "2-digit", hour12: true });
+}
+function isScheduled(order) {
+    if (!order || !order.scheduled_for || !order.created_at) return false;
+    return new Date(order.scheduled_for).getTime() - new Date(order.created_at).getTime() > 5 * 60 * 1000;
+}
+function updateScheduleNote() {
+    var note = document.getElementById("scheduleNote");
+    if (!note) return;
+    var next = scheduleFor(new Date());
+    if (next === null) {
+        note.classList.add("hidden");
+        note.textContent = "";
+        return;
+    }
+    note.textContent = "The kitchen is closed right now (Mon\u2013Fri, 6am\u20134pm). You can still pay: this order will be prepared on " + formatSchedule(next) + ".";
+    note.classList.remove("hidden");
+}
+updateScheduleNote();
+setInterval(updateScheduleNote, 60 * 1000);
+
 document.getElementById("submitOrder").addEventListener("click", async function() {
     var submitBtn = this;
     var errDiv = document.getElementById("formError");
@@ -168,6 +203,9 @@ window.addEventListener("pageshow", function (e) {
             "Total paid: " + naira(order.amount),
             (provider === "stripe" ? "Stripe session: " : "Paystack ref: ") + reference
         ];
+        if (isScheduled(order)) {
+            lines.push("Scheduled for: " + formatSchedule(new Date(order.scheduled_for)));
+        }
         if (d && d.name) {
             lines.push("Name: " + d.name, "Phone: " + d.phone, "Address: " + d.address);
         } else {
@@ -184,7 +222,8 @@ window.addEventListener("pageshow", function (e) {
             if (!r.ok) throw new Error(d.error || "verify failed");
             if (d.status === "paid") {
                 show("paid", "Payment received \u2705",
-                    "Order #" + d.order.id + " \u2014 " + d.order.quantity + " \u00d7 " + d.order.item + " \u2014 " + naira(d.order.amount) + " paid.",
+                    "Order #" + d.order.id + " \u2014 " + d.order.quantity + " \u00d7 " + d.order.item + " \u2014 " + naira(d.order.amount) + " paid." +
+                        (isScheduled(d.order) ? " The kitchen is closed right now, so it is scheduled for " + formatSchedule(new Date(d.order.scheduled_for)) + "." : ""),
                     "Last step: tap the button so the kitchen gets your order and delivery details on WhatsApp.");
                 waLink.href = whatsappMessage(d.order);
                 waLink.classList.remove("hidden");
