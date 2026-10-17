@@ -1,14 +1,6 @@
-// netlify/functions/chat.js
-//
-// FAQ chatbot backend for Fatima Spagogo.
-// Keeps the Gemini API key server-side — never expose it in front-end JS.
-//
-// REQUIRED SETUP:
-// 1. In the Netlify dashboard: Site settings > Environment variables
-//    Add GEMINI_API_KEY = <your key>  (do NOT put it in this file or commit it to git)
-// 2. Confirm the model name below is still active in Google AI Studio before deploying —
-//    Gemini model names get renamed/deprecated more often than you'd expect.
- 
+const MODEL = "gemini-3.5-flash-lite";
+const ITEMS = ["item1", "item2", "item3", "item4", "item5", "item6", "item7", "item8"];
+
 const SYSTEM_CONTEXT = `You are the FAQ assistant for Fatima Spagogo, a local food delivery service serving Ibafo and Mowe in Ogun State, Nigeria.
  
 FACTS YOU MUST STICK TO — do not invent anything beyond this list:
@@ -40,48 +32,33 @@ ORDER INTENT:
 - If orderIntent is true and no quantity was stated, default quantity to 1.
 - If orderIntent is false, item must be "unknown" and quantity must be 1.
 - When orderIntent is true and item is known, mention in the reply that you've filled in the order form for them and they just need to check the details, press Place Order and pay.`;
- 
-exports.handler = async (event) => {
-  const headers = {
-    "Access-Control-Allow-Origin": "*", // tighten to your actual domain once live
-    "Access-Control-Allow-Headers": "Content-Type",
-    "Access-Control-Allow-Methods": "POST, OPTIONS",
-  };
- 
-  // Preflight
-  if (event.httpMethod === "OPTIONS") {
-    return { statusCode: 204, headers, body: "" };
+
+export default async (req) => {
+  if (req.method !== "POST") {
+    return json(405, { error: "Method not allowed" });
   }
- 
-  if (event.httpMethod !== "POST") {
-    return { statusCode: 405, headers, body: JSON.stringify({ error: "Method not allowed" }) };
-  }
- 
-  // Parse and validate input
+
   let userMessage;
   try {
-    const body = JSON.parse(event.body || "{}");
-    userMessage = body.message;
+    const body = await req.json();
+    userMessage = body && body.message;
   } catch {
-    return { statusCode: 400, headers, body: JSON.stringify({ error: "Invalid JSON body" }) };
+    return json(400, { error: "Invalid JSON body" });
   }
- 
-  if (!userMessage || typeof userMessage !== "string" || userMessage.trim().length === 0) {
-    return { statusCode: 400, headers, body: JSON.stringify({ error: "Missing 'message'" }) };
+
+  if (typeof userMessage !== "string" || userMessage.trim().length === 0) {
+    return json(400, { error: "Missing 'message'" });
   }
   if (userMessage.length > 500) {
-    return { statusCode: 400, headers, body: JSON.stringify({ error: "Message too long" }) };
+    return json(400, { error: "Message too long" });
   }
- 
+
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
     console.error("GEMINI_API_KEY not set in environment");
-    return { statusCode: 500, headers, body: JSON.stringify({ error: "Server misconfigured" }) };
+    return json(500, { error: "Server misconfigured" });
   }
- 
-  // Verify this model ID is current before you deploy — check Google AI Studio.
-  const MODEL = "gemini-3.5-flash-lite";
- 
+
   try {
     const response = await fetch(
       `https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent`,
@@ -89,70 +66,86 @@ exports.handler = async (event) => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "x-goog-api-key": apiKey,
+          "x-goog-api-key": apiKey
         },
         body: JSON.stringify({
           system_instruction: { parts: [{ text: SYSTEM_CONTEXT }] },
           contents: [{ role: "user", parts: [{ text: userMessage }] }],
           generationConfig: {
-    maxOutputTokens: 4096,
-    temperature: 0.4,
-    thinkingConfig: { thinkingLevel: "low" },
-    responseMimeType: "application/json",
-    responseSchema: {
-      type: "object",
-      properties: {
-        reply: { type: "string", description: "2-3 sentence chat reply shown to the user." },
-        orderIntent: { type: "boolean", description: "True only if the user is trying to place an order right now." },
-        item: { type: "string", enum: ["item1", "item2", "item3", "item4", "item5", "item6", "item7", "item8", "unknown"], description: "item1=Beef, item2=Medium Chicken, item3=Big Chicken, item4=Fish, item5=Turkey, item6=Prawn, item7=Jollof + Plantain, item8=Family Pack. unknown if orderIntent is false or unclear." },
-        quantity: { type: "integer", description: "Quantity requested. 1 if unclear or orderIntent is false." }
-      },
-      required: ["reply", "orderIntent", "item", "quantity"]
-    }
-},
-        }),
+            maxOutputTokens: 4096,
+            temperature: 0.4,
+            thinkingConfig: { thinkingLevel: "low" },
+            responseMimeType: "application/json",
+            responseSchema: {
+              type: "object",
+              properties: {
+                reply: { type: "string", description: "2-3 sentence chat reply shown to the user." },
+                orderIntent: { type: "boolean", description: "True only if the user is trying to place an order right now." },
+                item: { type: "string", enum: ["item1", "item2", "item3", "item4", "item5", "item6", "item7", "item8", "unknown"], description: "item1=Beef, item2=Medium Chicken, item3=Big Chicken, item4=Fish, item5=Turkey, item6=Prawn, item7=Jollof + Plantain, item8=Family Pack. unknown if orderIntent is false or unclear." },
+                quantity: { type: "integer", description: "Quantity requested. 1 if unclear or orderIntent is false." }
+              },
+              required: ["reply", "orderIntent", "item", "quantity"]
+            }
+          }
+        })
       }
     );
- 
+
     if (!response.ok) {
       const errText = await response.text();
       console.error("Gemini API error:", response.status, errText);
       if (response.status === 429) {
-        return { statusCode: 200, headers, body: JSON.stringify({ reply: "The assistant has reached its free daily limit. Please message us on WhatsApp instead.", orderIntent: false, item: "unknown", quantity: 1 }) };
+        return json(200, { reply: "The assistant has reached its free daily limit. Please message us on WhatsApp instead.", orderIntent: false, item: "unknown", quantity: 1 });
       }
-      return { statusCode: 502, headers, body: JSON.stringify({ error: "Upstream API error" }) };
+      return json(502, { error: "Upstream API error" });
     }
- 
+
     const data = await response.json();
     console.log("finishReason:", data?.candidates?.[0]?.finishReason);
-console.log("usageMetadata:", JSON.stringify(data?.usageMetadata));
+    console.log("usageMetadata:", JSON.stringify(data?.usageMetadata));
     const parts = data?.candidates?.[0]?.content?.parts || [];
-const rawText = parts
-    .filter(function (p) { return p.text && !p.thought; })
-    .map(function (p) { return p.text; })
-    .join("");
+    const rawText = parts
+      .filter((p) => p.text && !p.thought)
+      .map((p) => p.text)
+      .join("");
 
-    var reply = "Sorry, I couldn't generate a response. Please try WhatsApp instead.";
-    var orderIntent = false;
-    var item = "unknown";
-    var quantity = 1;
+    let reply = "Sorry, I couldn't generate a response. Please try WhatsApp instead.";
+    let orderIntent = false;
+    let item = "unknown";
+    let quantity = 1;
 
     if (rawText) {
       try {
-        var parsed = JSON.parse(rawText);
+        const parsed = JSON.parse(rawText);
         reply = parsed.reply || reply;
         orderIntent = parsed.orderIntent === true;
-        item = ["item1", "item2", "item3", "item4", "item5", "item6", "item7", "item8"].indexOf(parsed.item) !== -1 ? parsed.item : "unknown";
+        item = ITEMS.includes(parsed.item) ? parsed.item : "unknown";
         quantity = Number.isInteger(parsed.quantity) && parsed.quantity > 0 ? parsed.quantity : 1;
       } catch (parseErr) {
         console.error("Failed to parse structured Gemini response:", parseErr, rawText);
-        reply = rawText; // fall back to showing the raw text rather than losing the reply entirely
+        reply = rawText;
       }
     }
 
-    return { statusCode: 200, headers, body: JSON.stringify({ reply: reply, orderIntent: orderIntent, item: item, quantity: quantity }) };
+    return json(200, { reply, orderIntent, item, quantity });
   } catch (err) {
     console.error("Function error:", err);
-    return { statusCode: 500, headers, body: JSON.stringify({ error: "Internal error" }) };
+    return json(500, { error: "Internal error" });
   }
 };
+
+export const config = {
+  path: "/api/chat",
+  rateLimit: {
+    windowLimit: 10,
+    windowSize: 60,
+    aggregateBy: ["ip", "domain"]
+  }
+};
+
+function json(status, body) {
+  return new Response(JSON.stringify(body), {
+    status,
+    headers: { "Content-Type": "application/json" }
+  });
+}
