@@ -167,7 +167,7 @@
         var top = el("div", "staffOrderTop");
         top.appendChild(el("span", "staffOrderId", "#" + o.id));
         top.appendChild(el("span", "staffOrderTime", formatTime(o.created_at)));
-                if (o.scheduled_for && o.created_at && new Date(o.scheduled_for).getTime() - new Date(o.created_at).getTime() > 5 * 60 * 1000) {
+        if (o.scheduled_for && o.created_at && new Date(o.scheduled_for).getTime() - new Date(o.created_at).getTime() > 5 * 60 * 1000) {
             top.appendChild(el("span", "staffScheduled", "Scheduled " + new Date(o.scheduled_for).toLocaleString("en-NG", { timeZone: "Africa/Lagos", weekday: "short", day: "numeric", month: "short", hour: "numeric", minute: "2-digit", hour12: true })));
         }
         top.appendChild(el("span", "staffPay p-" + o.status, PAYMENT[o.status] || o.status));
