@@ -42,6 +42,8 @@ const MENU = {
 // Delivery fee in naira. Mowe is a ₦500 minimum; any extra distance is settled on WhatsApp.
 const DELIVERY_FEE = { ibafo: 0, Mowe: 500 };
 const MAX_QUANTITY = 20;
+const OPEN_HOUR = 6;
+const CLOSE_HOUR = 16;
 
 export default async (req) => {
     if (req.method !== "POST") {
@@ -84,6 +86,7 @@ export default async (req) => {
 
     // Total in kobo (₦1 = 100 kobo), computed here and only here.
     const amount = (order.item.price * order.quantity + DELIVERY_FEE[order.zone]) * 100;
+    const scheduledFor = scheduleFor(new Date());
 
     // 1. Save the order as 'pending' (the points trigger sets points_earned = 0).
     const inserted = await supabaseRest(supabaseKey, "POST", "/rest/v1/orders?select=id", {
@@ -94,7 +97,8 @@ export default async (req) => {
         item: order.item.name,
         quantity: order.quantity,
         user_id: userId,
-        amount: amount
+        amount: amount,
+        scheduled_for: scheduledFor.toISOString()
     }, "return=representation");
     if (!inserted.ok || !inserted.data || !inserted.data[0] || inserted.data[0].id == null) {
         console.error("pay: could not insert order:", inserted.status, inserted.text);
@@ -155,7 +159,7 @@ export default async (req) => {
     }
 
     console.log("pay: order", orderId, "->", reference, "for", amount, "kobo");
-    return json(200, { url: paystack.data.authorization_url, reference: reference, amount: amount, orderId: orderId });
+    return json(200, { url: paystack.data.authorization_url, reference: reference, amount: amount, orderId: orderId, scheduledFor: scheduledFor.toISOString() });
 };
 
 // ---- helpers -----------------------------------------------------------------
@@ -188,6 +192,20 @@ function validate(b) {
         return { error: "Quantity must be between 1 and " + MAX_QUANTITY };
     }
     return { name, phone, email, address, zone, item: MENU[itemKey], quantity };
+}
+
+function scheduleFor(now) {
+    const lagos = new Date(now.getTime() + 60 * 60 * 1000);
+    const year = lagos.getUTCFullYear();
+    const month = lagos.getUTCMonth();
+    let day = lagos.getUTCDate();
+    const weekday = lagos.getUTCDay() >= 1 && lagos.getUTCDay() <= 5;
+    const hour = lagos.getUTCHours();
+    if (weekday && hour >= OPEN_HOUR && hour < CLOSE_HOUR) return now;
+    if (!weekday || hour >= CLOSE_HOUR) {
+        do { day += 1; } while ([0, 6].includes(new Date(Date.UTC(year, month, day)).getUTCDay()));
+    }
+    return new Date(Date.UTC(year, month, day, OPEN_HOUR, 0, 0) - 60 * 60 * 1000);
 }
 
 // Who does this access token belong to? null if invalid/expired.
