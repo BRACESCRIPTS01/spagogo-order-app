@@ -1,5 +1,6 @@
 const MODEL = "gemini-3.5-flash-lite";
 const ITEMS = ["item1", "item2", "item3", "item4", "item5", "item6", "item7", "item8"];
+const ALLOWED_ORIGINS = ["https://spagogofoodapp.netlify.app", "https://dev--spagogofoodapp.netlify.app"];
 
 const SYSTEM_CONTEXT = `You are the FAQ assistant for Fatima Spagogo, a local food delivery service serving Ibafo and Mowe in Ogun State, Nigeria.
  
@@ -36,6 +37,10 @@ ORDER INTENT:
 export default async (req) => {
   if (req.method !== "POST") {
     return json(405, { error: "Method not allowed" });
+  }
+  const requestOrigin = req.headers.get("origin");
+  if (requestOrigin && !ALLOWED_ORIGINS.includes(requestOrigin)) {
+    return json(403, { error: "Forbidden" });
   }
 
   let userMessage;
