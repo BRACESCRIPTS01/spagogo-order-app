@@ -31,7 +31,7 @@ const NEXT = {
     cancelled:        ["new"]           // undo a mistaken cancel
 };
 const PAYMENT_STATUSES = ["pending", "approved", "rejected", "error"];
-const ORDER_FIELDS = "id,created_at,customer_name,phone,address,zone,item,quantity,amount,status," +
+const ORDER_FIELDS = "id,created_at,scheduled_for,customer_name,phone,address,zone,item,quantity,amount,status," +
                      "kitchen_status,kitchen_updated_at,paystack_reference,user_id";
 
 export default async (req) => {
@@ -74,12 +74,15 @@ async function listOrders(req, secretKey) {
     const range = url.searchParams.get("range") === "all" ? "all" : "today";
     const statusParam = (url.searchParams.get("status") || "").trim();
 
-    const filters = ["select=" + ORDER_FIELDS, "order=created_at.desc", "limit=200"];
+    const filters = ["select=" + ORDER_FIELDS, "order=scheduled_for.desc,id.desc", "limit=200"];
     if (range === "today") {
-        // "Today" in Lagos (UTC+1, no DST). Kitchen hours are 6am-4pm so midnight-based is fine.
+        // "Today" in Lagos (UTC+1, no DST): orders scheduled for today, whenever they were placed.
         const now = new Date(Date.now() + 60 * 60 * 1000);
+        const tomorrow = new Date(now.getTime() + 24 * 60 * 60 * 1000);
         const start = now.toISOString().slice(0, 10) + "T00:00:00+01:00";
-        filters.push("created_at=gte." + encodeURIComponent(start));
+        const end = tomorrow.toISOString().slice(0, 10) + "T00:00:00+01:00";
+        filters.push("scheduled_for=gte." + encodeURIComponent(start));
+        filters.push("scheduled_for=lt." + encodeURIComponent(end));
     }
     if (statusParam) {
         const wanted = statusParam.split(",").map(s => s.trim()).filter(s => s in NEXT);
