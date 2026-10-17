@@ -19,6 +19,8 @@ const DELIVERY_FEE = { ibafo: 0, Mowe: 500 };
 const MAX_QUANTITY = 20;
 const CURRENCY = "ngn";
 const SESSION_MINUTES = 35;
+const OPEN_HOUR = 6;
+const CLOSE_HOUR = 16;
 
 export default async (req) => {
     if (req.method !== "POST") {
@@ -59,6 +61,7 @@ export default async (req) => {
 
     const deliveryFee = DELIVERY_FEE[order.zone];
     const amount = (order.item.price * order.quantity + deliveryFee) * 100;
+    const scheduledFor = scheduleFor(new Date());
 
     const inserted = await supabaseRest(supabaseKey, "POST", "/rest/v1/orders?select=id", {
         customer_name: order.name,
@@ -69,7 +72,8 @@ export default async (req) => {
         quantity: order.quantity,
         user_id: userId,
         amount: amount,
-        payment_provider: "stripe"
+        payment_provider: "stripe",
+        scheduled_for: scheduledFor.toISOString()
     }, "return=representation");
     if (!inserted.ok || !inserted.data || !inserted.data[0] || inserted.data[0].id == null) {
         console.error("stripe-checkout: could not insert order:", inserted.status, inserted.text);
@@ -140,7 +144,7 @@ export default async (req) => {
     }
 
     console.log("stripe-checkout: order", orderId, "->", session.id, "for", amount, "kobo");
-    return json(200, { url: session.url, reference: session.id, amount: amount, orderId: orderId });
+    return json(200, { url: session.url, reference: session.id, amount: amount, orderId: orderId, scheduledFor: scheduledFor.toISOString() });
 };
 
 function json(status, body) {
@@ -170,6 +174,20 @@ function validate(b) {
         return { error: "Quantity must be between 1 and " + MAX_QUANTITY };
     }
     return { name, phone, email, address, zone, item: MENU[itemKey], quantity };
+}
+
+function scheduleFor(now) {
+    const lagos = new Date(now.getTime() + 60 * 60 * 1000);
+    const year = lagos.getUTCFullYear();
+    const month = lagos.getUTCMonth();
+    let day = lagos.getUTCDate();
+    const weekday = lagos.getUTCDay() >= 1 && lagos.getUTCDay() <= 5;
+    const hour = lagos.getUTCHours();
+    if (weekday && hour >= OPEN_HOUR && hour < CLOSE_HOUR) return now;
+    if (!weekday || hour >= CLOSE_HOUR) {
+        do { day += 1; } while ([0, 6].includes(new Date(Date.UTC(year, month, day)).getUTCDay()));
+    }
+    return new Date(Date.UTC(year, month, day, OPEN_HOUR, 0, 0) - 60 * 60 * 1000);
 }
 
 async function getUser(token) {
