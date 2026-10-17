@@ -490,3 +490,14 @@
         margin-top: 10px;
     }
 }
+.scheduleNote {
+    grid-column: 1 / -1;
+    margin: 8px 0 0;
+    padding: 8px 10px;
+    border-radius: 10px;
+    background: rgba(179, 38, 30, 0.08);
+    border: 1px solid rgba(179, 38, 30, 0.3);
+    font-size: 12px;
+    line-height: 1.4;
+    color: var(--text-primary);
+}
