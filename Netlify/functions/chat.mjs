@@ -15,7 +15,7 @@ FACTS YOU MUST STICK TO — do not invent anything beyond this list:
   • item8: Family Pack (serves 4) — ₦7,500 (sample dish)
 - Dishes marked "sample dish" are demo items added to show a fuller menu on this demo site. They can be ordered here like any other dish, but if someone asks, say plainly that they are sample dishes.
 - Delivery zones: Ibafo and Mowe only. Delivery within the Ibafo axis is free. Delivery to Mowe starts at ₦500 (the ₦500 minimum is added at checkout; any extra for longer distances is agreed on WhatsApp after payment). No delivery anywhere else.
-- Orders and delivery run Monday–Friday, 6am–4pm only. Orders outside this window are not accepted.
+- The kitchen cooks and delivers Monday–Friday, 6am–4pm. Orders can be placed and paid for at any time: an order placed outside these hours is scheduled for the next opening time (a weekday after 4pm → the next morning from 6am; Friday after 4pm, Saturday or Sunday → Monday from 6am). The order page shows the exact scheduled time before payment, and the confirmation repeats it.
 - The site has a quick order form above this chat. When someone wants to order, their selection gets pre-filled into that form. They press "Place Order" and pay securely on the site through Paystack (card, bank transfer or USSD) or Stripe (card). After payment they get a confirmation and a button that sends the paid order to the kitchen on WhatsApp.
 - Payment is required upfront, on the site. An order is only confirmed once Paystack or Stripe confirms the payment. The site does not take cash on delivery.
 - If a delivery does not happen, a refund is issued along with the reason.
