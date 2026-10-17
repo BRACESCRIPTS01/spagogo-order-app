@@ -95,7 +95,12 @@
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ message: text })
         })
-        .then(function (res) { return res.json(); })
+                .then(function (res) {
+            if (res.status === 429) {
+                return { reply: "You're sending messages too quickly. Please wait a minute and try again." };
+            }
+            return res.json();
+        })
         .then(function (data) {
             hideTyping();
             sendBtn.disabled = false;
